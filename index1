@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase: Ley de Graham - El Movimiento de los Gases</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #eef2f7;
+            color: #4a5568;
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+        .class-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+        .main-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #2c5282 0%, #2a69ac 50%, #007a7a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .main-header .subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+        }
+        .main-header .info {
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+
+        .slide-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 4px solid #4299e1;
+            text-align: center;
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* Ajustado para recuadros */
+            font-weight: 600;
+            color: #2c5282;
+            margin-top: 1.5rem; /* Ajustado */
+            margin-bottom: 1rem; /* Ajustado */
+        }
+        .subsection-title i {
+            margin-right: 0.75rem;
+            color: #4299e1;
+        }
+
+        article.slide-content {
+            background-color: #ffffff;
+            padding: 25px; /* Ajustado */
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+            margin-bottom: 2.5rem;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+        article.slide-content:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .content-box { /* Nuevo estilo para recuadros internos */
+            background-color: #f9fafb; /* Ligeramente diferente del article */
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+        .content-box h4 { /* Título para recuadros */
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.75rem;
+        }
+         .content-box ul, .content-box ol {
+            padding-left: 1.5rem; /* Indentación para listas en recuadros */
+        }
+
+
+        .placeholder-interactive {
+            background-color: #f0f9ff; /* Azul muy claro */
+            border: 2px dashed #90cdf4; /* Azul más suave */
+            padding: 30px;
+            margin-top: 2rem;
+            border-radius: 10px;
+            min-height: 150px; /* Ajustado */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #718096;
+        }
+        .placeholder-interactive i {
+            font-size: 1.8rem; /* Ajustado */
+            margin-bottom: 0.75rem;
+            color: #a0aec0;
+        }
+         .placeholder-interactive p {
+            font-style: italic;
+            font-size: 0.9rem; /* Ajustado */
+        }
+
+        .math-display {
+             overflow-x: auto;
+             padding: 15px;
+             background-color: #f8faff;
+             border-radius: 8px;
+             border: 1px solid #e2e8f0;
+             margin: 1rem 0; /* Ajustado */
+             font-size: 1.1em;
+        }
+        .thomas-graham-img {
+            width: 120px; /* Ajustado */
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-right: 1.5rem; /* Ajustado */
+            margin-bottom: 1rem;
+            float: left;
+        }
+        .clear-float {
+            clear: both;
+        }
+
+        .agenda-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .agenda-list li {
+            padding: 0.6rem 0; /* Ajustado */
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem; /* Ajustado */
+        }
+        .agenda-list li:last-child {
+            border-bottom: none;
+        }
+        .agenda-list i {
+            color: #4299e1;
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+        }
+        .key-term {
+            background-color: #e0f2fe; /* Light blue background for key terms */
+            color: #0c4a6e; /* Darker blue text */
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .important-note {
+            background-color: #fffbeb; /* Light yellow */
+            border-left: 4px solid #facc15; /* Yellow accent */
+            padding: 10px 15px;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        .example-box {
+            border: 1px solid #d1fae5; /* Light green border */
+            background-color: #f0fdf4; /* Very light green */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .example-box .example-title {
+            font-weight: 600;
+            color: #059669; /* Green */
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="class-container">
+        <header class="main-header text-center py-10 slide-section">
+            <h1 id="slide1">Ley de Graham: El Movimiento de los Gases</h1>
+            <p class="subtitle">Una exploración interactiva de la efusión y difusión gaseosa</p>
+            <p class="info mt-2">Facultad de Ciencias Naturales y Museo - UNLP</p>
+            <p class="info">Fecha: <span id="currentDate"></span></p>
+            <div class="placeholder-interactive mt-6">
+                <i class="fas fa-atom"></i>
+                <p>(Fondo dinámico con partículas de gas abstractas en movimiento suave)</p>
+            </div>
+        </header>
+
+        <main>
+            <section id="slide2" class="slide-section fade-in-section">
+                <h2 class="section-title">Agenda de la Clase</h2>
+                <article class="slide-content">
+                    <ul class="agenda-list">
+                        <li><i class="fas fa-wind"></i>Recordando los Gases: Propiedades Esenciales.</li>
+                        <li><i class="fas fa-eye"></i>Observaciones iniciales: ¿Cómo se mueven los gases?</li>
+                        <li><i class="fas fa-user-tie"></i>Thomas Graham: El Científico.</li>
+                        <li><i class="fas fa-project-diagram"></i>Conceptos Fundamentales: Difusión vs. Efusión.</li>
+                        <li><i class="fas fa-scroll"></i>La Ley de Graham: Enunciado y Significado.</li>
+                        <li><i class="fas fa-brain"></i>Base Teórica: La Teoría Cinético-Molecular.</li>
+                        <li><i class="fas fa-calculator"></i>La Fórmula: Desglose y Exploración.</li>
+                        <li><i class="fas fa-images"></i>Ejemplos Visuales y Aplicaciones.</li>
+                        <li><i class="fas fa-pencil-alt"></i>Resolución de Problemas.</li>
+                        <li><i class="fas fa-home"></i>Ley de Graham en la Vida Cotidiana.</li>
+                        <li><i class="fas fa-exclamation-triangle"></i>Limitaciones y Consideraciones.</li>
+                        <li><i class="fas fa-cogs"></i>Más Allá de Graham: Modelos Avanzados.</li>
+                        <li><i class="fas fa-lightbulb"></i>Conclusiones y Relevancia.</li>
+                        <li><i class="fas fa-question-circle"></i>Evaluación Rápida.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section id="slide3" class="slide-section fade-in-section">
+                <h2 class="section-title">Un Breve Repaso sobre los Gases</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-atom"></i> Propiedades Clave</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="content-box"><h4><i class="fas fa-expand-arrows-alt"></i> Expansibilidad y Compresibilidad</h4><p>Los gases llenan cualquier recipiente y se comprimen fácilmente.</p></div>
+                        <div class="content-box"><h4><i class="fas fa-feather-alt"></i> Baja Densidad</h4><p>Mucho menos densos que líquidos y sólidos.</p></div>
+                        <div class="content-box"><h4><i class="fas fa-running"></i> Movimiento Molecular</h4><p>Partículas en movimiento constante, rápido y aleatorio.</p></div>
+                        <div class="content-box"><h4><i class="fas fa-sliders-h"></i> Variables de Estado</h4><p>Descritos por Presión (P), Volumen (V), Temperatura (T) y cantidad (n).</p></div>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4><i class="fas fa-weight-hanging"></i> Masa Molar (M)</h4>
+                        <p>Propiedad intrínseca (g/mol), crucial para la Ley de Graham.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-cubes"></i>
+                        <p>(Animación: partículas de gas moviéndose, con controles conceptuales para T o V)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide4" class="slide-section fade-in-section">
+                <h2 class="section-title">Thomas Graham (1805-1869)</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-user-tie"></i> Pionero en la Química Física</h3>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Thomas_Graham_-_Project_Gutenberg_eText_15926.jpg/220px-Thomas_Graham_-_Project_Gutenberg_eText_15926.jpg" alt="[Imagen de Thomas Graham]" class="thomas-graham-img" onerror="this.alt='[Imagen de Thomas Graham no disponible]'; this.src='https://placehold.co/120x120/cccccc/333333?text=T.G.';">
+                    <div class="content-box">
+                        <p>Químico escocés (1805–1869), clave en el estudio de la difusión y la química de coloides.</p>
+                    </div>
+                    <div class="content-box">
+                        <h4><i class="fas fa-award"></i> Contribuciones Principales:</h4>
+                        <ul class="list-disc list-inside ml-5 space-y-1">
+                            <li>Formulación de la <span class="key-term">Ley de Graham</span>.</li>
+                            <li>Trabajos en <span class="key-term">diálisis</span> y <span class="key-term">química de coloides</span>.</li>
+                            <li>Fundador de la Chemical Society of London.</li>
+                        </ul>
+                    </div>
+                    <div class="clear-float"></div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-history"></i>
+                        <p>(Línea de tiempo interactiva de los hitos de Thomas Graham)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide5" class="slide-section fade-in-section">
+                <h2 class="section-title">Difusión en Acción</h2>
+                <article class="slide-content">
+                    <div class="content-box">
+                        <h4 class="flex items-center"><i class="fas fa-coffee mr-2"></i>El Viaje de los Aromas</h4>
+                        <p>La difusión es un proceso cotidiano. El aroma del perfume o del café se esparce en una habitación porque las moléculas aromáticas se mezclan con el aire, moviéndose de donde están más concentradas hacia donde lo están menos.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-cloud"></i>
+                        <p>(Simulación de difusión: partículas de "aroma" dispersándose)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide6" class="slide-section fade-in-section">
+                <h2 class="section-title">Efusión en Acción</h2>
+                <article class="slide-content">
+                     <div class="content-box">
+                        <h4 class="flex items-center"><i class="fas fa-golf-ball mr-2"></i>El Escape Controlado</h4>
+                        <p>La efusión ocurre cuando un gas escapa por un orificio muy pequeño (menor que el <span class="key-term">camino libre medio</span>). Un globo de helio se desinfla por efusión a través de los poros del material.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-external-link-alt"></i>
+                        <p>(Simulación de efusión)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide7" class="slide-section fade-in-section">
+                <h2 class="section-title">¿Cómo se Mueven los Gases?</h2>
+                 <article class="slide-content">
+                    <p class="text-center mb-4">Los gases tienden a ocupar todo el volumen disponible. Este movimiento se manifiesta de dos formas principales que acabamos de ver en acción:</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="content-box text-center">
+                            <h4 class="text-blue-600"><i class="fas fa-wind"></i> Difusión</h4>
+                            <p class="text-sm">Mezcla gradual y espontánea de gases debido al movimiento cinético aleatorio. De alta a baja concentración.</p>
+                            <div class="placeholder-interactive mt-3">
+                                <i class="fas fa-sync-alt fa-spin" style="color: #3B82F6;"></i>
+                                <p>(Simulación de Difusión)</p>
+                            </div>
+                        </div>
+                        <div class="content-box text-center">
+                            <h4 class="text-green-600"><i class="fas fa-sign-out-alt"></i> Efusión</h4>
+                            <p class="text-sm">Escape de un gas bajo presión a través de un orificio diminuto. Idealmente, molécula por molécula.</p>
+                            <div class="placeholder-interactive mt-3">
+                                <i class="fas fa-external-link-square-alt" style="color: #10B981;"></i>
+                                <p>(Simulación de Efusión)</p>
+                            </div>
+                        </div>
+                    </div>
+                     <p class="important-note mt-4 text-sm">Ambos procesos, aunque distintos, están gobernados por la misma relación fundamental: la velocidad depende de la masa molar del gas.</p>
+                </article>
+            </section>
+
+            <section id="slide8" class="slide-section fade-in-section">
+                <h2 class="section-title">¿Qué Establece la Ley de Graham?</h2>
+                <article class="slide-content">
+                    <div class="content-box">
+                        <h4 class="text-center"><i class="fas fa-scroll"></i> El Enunciado Formal</h4>
+                        <p class="text-center text-lg italic my-3">"A temperatura y presión constantes, la velocidad de efusión (o difusión) de un gas es <span class="key-term">inversamente proporcional</span> a la <span class="key-term">raíz cuadrada</span> de su <span class="key-term">masa molar</span>."</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4 mt-4">
+                        <div class="content-box">
+                            <h4 class="text-blue-600 text-center"><i class="fas fa-rocket"></i> Gases Ligeros</h4>
+                            <p class="text-center">Menor masa molar (M) $\rightarrow$ Se mueven <strong>más rápido</strong>.</p>
+                        </div>
+                        <div class="content-box">
+                            <h4 class="text-red-600 text-center"><i class="fas fa-anchor"></i> Gases Pesados</h4>
+                            <p class="text-center">Mayor masa molar (M) $\rightarrow$ Se mueven <strong>más lento</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-balance-scale-right"></i>
+                        <p>(Visualización: balanza conceptual o partículas de diferentes tamaños/velocidades)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide9" class="slide-section fade-in-section">
+                <h2 class="section-title">El Fundamento: La Teoría Cinético-Molecular</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-brain"></i> Postulados de la TCM (para Gases Ideales)</h3>
+                    <div class="content-box">
+                        <p>La TCM describe el comportamiento de los gases ideales basándose en las siguientes hipótesis (según pág. 23 de la guía):</p>
+                        <ol class="list-decimal list-inside space-y-2 mt-2">
+                            <li>Los gases se componen de un gran número de átomos o moléculas en <span class="key-term">movimiento continuo y desordenado</span>.</li>
+                            <li>El <span class="key-term">volumen</span> de estas partículas es <span class="key-term">despreciable</span> comparado con el volumen total del recipiente.</li>
+                            <li>Las <span class="key-term">fuerzas de atracción y repulsión</span> entre las partículas son <span class="key-term">despreciables</span>.</li>
+                            <li>Los <span class="key-term">choques</span> entre partículas y con las paredes del recipiente son <span class="key-term">completamente elásticos</span> (no hay pérdida neta de energía cinética en las colisiones).</li>
+                            <li>La <span class="key-term">energía cinética promedio</span> ($KE_{prom}$) de las partículas es <span class="key-term">directamente proporcional</span> a la <span class="key-term">temperatura absoluta (T)</span> del gas y <span class="font-bold">no depende de la naturaleza del gas</span>.</li>
+                        </ol>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Consecuencia Clave del Postulado 5:</h4>
+                        <p class="important-note">A una misma temperatura absoluta, la <span class="font-bold">energía cinética media</span> de todos los gases es la <span class="font-bold">misma</span>.</p>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Recordatorio: Energía Cinética</h4>
+                        <p>La energía que posee un cuerpo en virtud de su movimiento:</p>
+                        <div class="math-display text-center">$$ KE = \frac{1}{2}mv^2 $$</div>
+                        <p class="text-sm text-center">(donde $m$ es la masa de la partícula y $v$ su velocidad)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide10" class="slide-section fade-in-section">
+                <h2 class="section-title">Misma Temperatura = Misma $KE_{prom}$</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-link"></i> La Derivación Conceptual de la Ley de Graham</h3>
+                    <div class="content-box">
+                        <p>La TCM establece que si dos gases distintos (Gas 1 y Gas 2) están a la misma temperatura absoluta, deben tener la misma energía cinética media:</p>
+                        <div class="math-display text-center">$$ KE_{prom,1} = KE_{prom,2} $$</div>
+                        <p>Sustituyendo la expresión de la energía cinética ($KE = \frac{1}{2}mv^2$), y usando la masa molar (M) como proporcional a la masa de una molécula (m) y $v_{rms}$ como la velocidad cuadrática media (una medida de la velocidad promedio):</p>
+                        <div class="math-display text-center">$$ \frac{1}{2}M_1 v_{rms,1}^2 = \frac{1}{2}M_2 v_{rms,2}^2 $$</div>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Implicación Directa:</h4>
+                        <p class="important-note">Para que esta igualdad se cumpla, si un gas tiene una masa molar menor (es más ligero, ej. $M_1 < M_2$), sus moléculas deben moverse, en promedio, a una velocidad mayor ($v_{rms,1} > v_{rms,2}$).</p>
+                        <p class="mt-2">Reordenando la ecuación anterior, se llega a la relación de velocidades de Graham:</p>
+                        <div class="math-display text-center">$$ \frac{v_{rms,1}}{v_{rms,2}} = \sqrt{\frac{M_2}{M_1}} $$</div>
+                        <p class="text-sm text-center">Esto demuestra que la Ley de Graham es una consecuencia directa de los postulados de la Teoría Cinético-Molecular.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <p>(Visualización de Energía Cinética: partículas azules (ligeras) y rojas (pesadas) a la misma "temperatura", mostrando diferentes velocidades promedio)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide11" class="slide-section fade-in-section">
+                <h2 class="section-title">Expresión Matemática de la Ley</h2>
+                <article class="slide-content">
+                    <div class="content-box">
+                        <h4 class="text-center"><i class="fas fa-square-root-alt"></i> La Fórmula Principal (Gases 1 y 2)</h4>
+                        <div class="math-display text-center">$$ \frac{\text{Velocidad}_1}{\text{Velocidad}_2} = \sqrt{\frac{M_2}{M_1}} $$</div>
+                        <p class="text-sm">($\text{Velocidad}$ = tasa de efusión/difusión, $M$ = Masa Molar)</p>
+                        <p class="important-note text-sm"><strong>¡Atención!</strong> Relación inversa en los subíndices de $M$ bajo la raíz.</p>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4 class="text-center">Alternativa con Densidades ($\rho$)</h4>
+                        <p class="text-sm text-center">(Si T y P son constantes)</p>
+                        <div class="math-display text-center">$$ \frac{\text{Velocidad}_1}{\text{Velocidad}_2} = \sqrt{\frac{\rho_2}{\rho_1}} $$</div>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-sliders-h"></i>
+                        <p>(Explorador Interactivo de la Fórmula: sliders para M₁ y M₂)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide12" class="slide-section fade-in-section">
+                <h2 class="section-title">Ejemplo: Globos que se Desinflan</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="far fa-futbol"></i> ¿Por Qué un Globo de Helio se Desinfla Antes?</h3>
+                    <div class="content-box">
+                        <h4>Escenario:</h4>
+                        <ul class="list-disc list-inside ml-5 text-sm">
+                            <li>Globo A: Lleno de Helio (He, $M \approx 4 \text{ g/mol}$)</li>
+                            <li>Globo B: Lleno de Aire (mezcla, $M_{prom} \approx 29 \text{ g/mol}$)</li>
+                        </ul>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Explicación (Ley de Graham):</h4>
+                        <p class="text-sm">El Helio es mucho más ligero. Sus moléculas (<span class="key-term">más rápidas</span>) se efunden por los poros del globo a una velocidad significativamente mayor.</p>
+                        <div class="math-display text-center text-xs">$$ \frac{\text{Velocidad}_{He}}{\text{Velocidad}_{Aire}} = \sqrt{\frac{M_{Aire}}{M_{He}}} = \sqrt{\frac{29}{4}} \approx 2.69 $$</div>
+                        <p class="text-sm important-note">El Helio escapa casi 2.7 veces más rápido que el Aire.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-hourglass-half"></i>
+                        <p>(Imagen/animación de dos globos, uno de helio desinflándose más rápido)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide13" class="slide-section fade-in-section">
+                <h2 class="section-title">Ejemplo: La Carrera de los Olores</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-wind"></i> ¿Quién Llega Primero?</h3>
+                    <div class="content-box">
+                        <h4>Escenario:</h4>
+                        <p class="text-sm">En extremos opuestos de una habitación: Amoniaco (NH₃) y Vanilina (C₈H₈O₃, perfume).</p>
+                        <ul class="list-disc list-inside ml-5 text-sm">
+                            <li>$M_{NH_3} \approx 17 \text{ g/mol}$</li>
+                            <li>$M_{Vanilina} \approx 152 \text{ g/mol}$</li>
+                        </ul>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Explicación (Ley de Graham):</h4>
+                        <p class="text-sm">El amoniaco (<span class="key-term">más ligero</span>) se difundirá por el aire más rápidamente. Su olor se percibirá antes.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-running"></i>
+                        <p>(Diagrama: "nubes" de dos gases difundiéndose, el ligero avanza más)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide14" class="slide-section fade-in-section">
+                <h2 class="section-title">Demostración Clásica: HCl y NH₃</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-magic"></i> El Anillo de Cloruro de Amonio</h3>
+                    <div class="content-box">
+                        <h4>Configuración Experimental:</h4>
+                        <p class="text-sm">Tubo de vidrio horizontal. Algodón con HCl ($M \approx 36.5 \text{ g/mol}$) en un extremo, algodón con NH₃ ($M \approx 17 \text{ g/mol}$) en el otro.</p>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Observación y Predicción:</h4>
+                        <p class="text-sm">Los gases se difunden y reaccionan formando un anillo blanco de NH₄Cl(s).</p>
+                        <div class="math-display text-center text-xs">$$ \text{NH}_3\text{(g)} + \text{HCl(g)} \rightarrow \text{NH}_4\text{Cl(s)} $$</div>
+                        <p class="important-note text-sm">El NH₃ (<span class="key-term">más ligero</span>) viaja más rápido. El anillo se forma <span class="font-bold">más cerca del extremo del HCl</span>.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-ruler-horizontal"></i>
+                        <p>(Diagrama/animación del tubo y formación del anillo)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide15" class="slide-section fade-in-section">
+                <h2 class="section-title">Cálculo: Comparando Velocidades</h2>
+                <article class="slide-content">
+                    <div class="content-box">
+                        <h4 class="flex items-center"><i class="fas fa-calculator mr-2"></i> Problema Práctico: ¿Cuánto Más Rápido?</h4>
+                        <p class="mb-2"><strong>Pregunta:</strong> ¿Cuántas veces más rápido efunde H₂ ($M \approx 2.02 \text{ g/mol}$) que O₂ ($M \approx 32.00 \text{ g/mol}$)?</p>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Solución:</h4>
+                        <ol class="list-decimal list-inside space-y-1 text-sm">
+                            <li><strong>Datos:</strong> $M_{H_2} = 2.02 \text{ g/mol}$, $M_{O_2} = 32.00 \text{ g/mol}$.</li>
+                            <li><strong>Fórmula:</strong> $\frac{\text{Velocidad}_{H_2}}{\text{Velocidad}_{O_2}} = \sqrt{\frac{M_{O_2}}{M_{H_2}}}$</li>
+                            <li><strong>Sustitución:</strong> $\sqrt{\frac{32.00}{2.02}}$</li>
+                            <li><strong>Cálculo:</strong> $\sqrt{15.84} \approx 3.98$</li>
+                        </ol>
+                    </div>
+                    <div class="example-box mt-4">
+                        <p class="text-lg font-semibold text-center example-title"><strong>Respuesta:</strong> El H₂ efunde ~3.98 veces más rápido que el O₂.</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide16" class="slide-section fade-in-section">
+                <h2 class="section-title">Cálculo: Identificando un Gas</h2>
+                <article class="slide-content">
+                     <div class="content-box">
+                        <h4 class="flex items-center"><i class="fas fa-search mr-2"></i> Problema Práctico: ¿Qué Gas Es?</h4>
+                        <p class="mb-2"><strong>Pregunta:</strong> Gas X efunde 0.500 veces la velocidad del CH₄ ($M \approx 16.04 \text{ g/mol}$). Calcular $M_X$.</p>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Solución:</h4>
+                        <ol class="list-decimal list-inside space-y-1 text-sm">
+                            <li><strong>Datos:</strong> $\frac{\text{Velocidad}_X}{\text{Velocidad}_{CH_4}} = 0.500$; $M_{CH_4} = 16.04 \text{ g/mol}$.</li>
+                            <li><strong>Fórmula:</strong> $\frac{\text{Velocidad}_X}{\text{Velocidad}_{CH_4}} = \sqrt{\frac{M_{CH_4}}{M_X}}$</li>
+                            <li><strong>Sustitución y Álgebra:</strong> $0.500 = \sqrt{\frac{16.04}{M_X}} \Rightarrow (0.500)^2 = \frac{16.04}{M_X}$</li>
+                            <li><strong>Cálculo:</strong> $0.250 = \frac{16.04}{M_X} \Rightarrow M_X = \frac{16.04}{0.250} = 64.16 \text{ g/mol}$</li>
+                        </ol>
+                    </div>
+                     <div class="example-box mt-4">
+                        <p class="text-lg font-semibold text-center example-title"><strong>Respuesta:</strong> $M_X \approx 64.16 \text{ g/mol}$ (Podría ser SO₂).</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-cogs"></i>
+                        <p>(Calculadora de Masa Molar interactiva)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide17" class="slide-section fade-in-section">
+                <h2 class="section-title">Aplicaciones: Tecnología (Parte 1)</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-atom-alt"></i> Separación de Isótopos</h3>
+                    <div class="content-box">
+                        <p>Aplicación histórica: enriquecimiento de Uranio (UF₆).</p>
+                        <ul class="list-disc list-inside ml-5 text-sm space-y-1">
+                            <li>²³⁵UF₆ ($M \approx 349.03 \text{ g/mol}$) vs. ²³⁸UF₆ ($M \approx 352.04 \text{ g/mol}$)</li>
+                            <li>²³⁵UF₆ es ~0.43% más rápido: $\sqrt{352.04/349.03} \approx 1.0043$.</li>
+                        </ul>
+                        <p class="important-note text-sm">Requiere miles de etapas en cascada.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-industry"></i>
+                        <p>(Visualización conceptual de múltiples etapas de efusión/difusión)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide18" class="slide-section fade-in-section">
+                <h2 class="section-title">Aplicaciones: Tecnología (Parte 2)</h2>
+                <article class="slide-content">
+                    <div class="content-box">
+                        <h4 class="flex items-center"><i class="fas fa-balance-scale-left mr-2"></i> Determinación de Masas Molares</h4>
+                        <p class="text-sm">Método histórico y pedagógico. Superado en precisión por técnicas modernas (ej. espectrometría de masas).</p>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4 class="flex items-center"><i class="fas fa-hard-hat mr-2"></i> Seguridad Industrial y Detección de Fugas</h4>
+                        <ul class="list-disc list-inside ml-5 text-sm space-y-1">
+                            <li>Predicción de dispersión de gases peligrosos.</li>
+                            <li>Diseño de ventilación.</li>
+                            <li>Odorización de gas natural (mercaptanos).</li>
+                            <li>Colocación de sensores de gases.</li>
+                        </ul>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <p>(Diagrama: planta industrial, fugas, sensores, odorizantes)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide19" class="slide-section fade-in-section">
+                <h2 class="section-title">La Ley de Graham en el Mundo Natural</h2>
+                <article class="slide-content">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="content-box">
+                            <h4 class="flex items-center"><i class="fas fa-globe-americas mr-2"></i> Geociencias</h4>
+                            <ul class="list-disc list-inside ml-5 text-sm space-y-1">
+                                <li>Movimiento de gases en suelos/rocas (Radón, CH₄, CO₂).</li>
+                                <li>Fraccionamiento isotópico.</li>
+                                <li>Emisiones volcánicas.</li>
+                            </ul>
+                        </div>
+                        <div class="content-box">
+                            <h4 class="flex items-center"><i class="fas fa-leaf mr-2"></i> Ciencias Biológicas y Ecología</h4>
+                            <ul class="list-disc list-inside ml-5 text-sm space-y-1">
+                                <li>Intercambio gaseoso (pulmones, estomas).</li>
+                                <li>Dispersión de contaminantes.</li>
+                                <li>Ciclos biogeoquímicos (CH₄, N₂O).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="placeholder-interactive mt-4">
+                        <i class="fas fa-mountain"></i>
+                        <p>(Collage: volcán, suelo, pulmones, planta, chimenea)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide20" class="slide-section fade-in-section">
+                <h2 class="section-title">Graham a Nuestro Alrededor</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-mug-hot"></i> Ejemplos Cotidianos</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="content-box"><h4><i class="fas fa-utensils"></i> Olores de Cocina</h4><p class="text-sm">Aromas ligeros y volátiles se perciben antes.</p></div>
+                        <div class="content-box"><h4><i class="far fa-dot-circle"></i> Neumáticos</h4><p class="text-sm">Conceptualmente, Helio escaparía más rápido que Aire.</p></div>
+                        <div class="content-box"><h4><i class="fas fa-spray-can"></i> Ambientadores</h4><p class="text-sm">Propelente ligero se dispersa rápido.</p></div>
+                        <div class="content-box"><h4><i class="fas fa-lungs-virus"></i> Respiración</h4><p class="text-sm">Movimiento de O₂/CO₂ en alvéolos (fase gaseosa).</p></div>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-home"></i>
+                        <p>(Fotografías o ilustraciones de estas situaciones)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide21" class="slide-section fade-in-section">
+                <h2 class="section-title">Consideraciones y Limitaciones</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-exclamation-circle"></i> Factores a Tener en Cuenta</h3>
+                    <div class="content-box">
+                        <h4>Condiciones:</h4>
+                        <ul class="list-disc list-inside ml-5 text-sm">
+                            <li><span class="key-term">Temperatura:</span> Afecta KE y velocidades. Ley asume T constante.</li>
+                            <li><span class="key-term">Presión:</span> Gradientes inducen flujo advectivo. Ley asume P cte. o vacío.</li>
+                            <li><span class="key-term">Orificio (Efusión):</span> Debe ser muy pequeño (diámetro < camino libre medio).</li>
+                        </ul>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h4>Naturaleza del Gas y Medio:</h4>
+                        <ul class="list-disc list-inside ml-5 text-sm">
+                            <li><span class="key-term">Gases Reales:</span> Se desvían de idealidad (fuerzas intermoleculares, volumen).</li>
+                            <li><span class="key-term">Medio de Difusión:</span> Complejidad en mezclas, medios porosos (tortuosidad, adsorción).</li>
+                        </ul>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-microscope"></i>
+                        <p>(Diagramas: poro grande vs. pequeño; fuerzas intermoleculares; camino tortuoso)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide22" class="slide-section fade-in-section">
+                <h2 class="section-title">Más Allá de Graham</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-layer-group"></i> Modelos Avanzados (Breve Mención)</h3>
+                    <div class="content-box">
+                        <p class="text-sm">Para sistemas complejos, se usan modelos más sofisticados que integran principios de Graham:</p>
+                        <ul class="list-disc list-inside ml-5 text-sm space-y-1">
+                            <li><span class="key-term">Difusión de Knudsen</span> (poros muy pequeños).</li>
+                            <li><span class="key-term">Modelo de Gas Polvoriento (DGM)</span> (unifica mecanismos).</li>
+                            <li><span class="key-term">Ecuaciones de Stefan-Maxwell</span> (mezclas multicomponente).</li>
+                        </ul>
+                        <p class="important-note text-sm mt-2">La Ley de Graham es el punto de partida y sus principios se integran.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-sitemap"></i>
+                        <p>(Esquema: "Ley de Graham" como base $\rightarrow$ "Modelos Avanzados")</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide23" class="slide-section fade-in-section">
+                <h2 class="section-title">Lo Esencial para Recordar</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-check-double"></i> Puntos Fundamentales</h3>
+                    <div class="content-box">
+                        <ol class="list-decimal list-inside space-y-2">
+                            <li>Ley de Graham: $\frac{v_1}{v_2} = \sqrt{\frac{M_2}{M_1}}$.</li>
+                            <li>Gases ligeros $\rightarrow$ más rápidos (misma T).</li>
+                            <li>Base: TCM (misma T $\Rightarrow$ misma $KE_{prom}$).</li>
+                            <li>Procesos: Difusión (mezcla) y Efusión (escape).</li>
+                            <li>Aplicaciones amplias (isótopos, seguridad, naturaleza).</li>
+                            <li>Limitaciones: Ideal para gases ideales; factores del medio y gas real influyen.</li>
+                        </ol>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-list-alt"></i>
+                        <p>(Mapa conceptual o infografía interactiva resumiendo los puntos)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide24" class="slide-section fade-in-section">
+                <h2 class="section-title">Conclusión: La Vigencia de la Ley</h2>
+                <article class="slide-content">
+                    <h3 class="subsection-title"><i class="fas fa-graduation-cap"></i> Más Allá de una Simple Fórmula</h3>
+                    <div class="content-box">
+                        <p>La Ley de Graham es una <span class="key-term">herramienta conceptual y predictiva</span> fundamental.</p>
+                        <p class="mt-2">Ayuda a entender el movimiento de gases en industria, naturaleza y vida cotidiana.</p>
+                        <p class="important-note mt-2">Aunque tiene limitaciones, su principio básico sobre la <span class="font-bold">dependencia de la masa</span> es crucial y se integra en modelos más avanzados.</p>
+                    </div>
+                    <div class="placeholder-interactive">
+                        <i class="fas fa-infinity"></i>
+                        <p>(Imagen impactante: ciencia, naturaleza, tecnología)</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="slide25" class="slide-section fade-in-section">
+                <h2 class="section-title">¿Preguntas? / Evaluación Rápida</h2>
+                <article class="slide-content">
+                    <div class="content-box">
+                        <h4 class="text-center"><i class="fas fa-question-circle"></i> Espacio para Preguntas y Discusión</h4>
+                        <p class="text-center mt-2">Este es el momento para plantear cualquier duda o comentario.</p>
+                    </div>
+                    
+                    <div class="content-box mt-6">
+                        <h4 class="text-center"><i class="fas fa-tasks"></i> Evaluación Rápida</h4>
+                        <p class="text-center mb-3">Pongamos a prueba lo aprendido:</p>
+                        <div class="placeholder-interactive">
+                            <i class="fas fa-check-circle"></i>
+                            <p>(Quiz Interactivo: 2-3 preguntas de opción múltiple. Se integrará aquí.)</p>
+                        </div>
+                    </div>
+
+                    <p class="text-center mt-10 text-xl font-semibold">¡Gracias por su atención!</p>
+                    <div class="placeholder-interactive mt-2">
+                        <i class="fas fa-address-card"></i>
+                        <p>(Información de contacto opcional)</p>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; <span id="currentYear"></span> - Curso Interactivo de Fisicoquímica - UNLP</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Fecha y Año Actual ---
+            const dateElement = document.getElementById('currentDate');
+            if (dateElement) {
+                dateElement.textContent = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            const yearElement = document.getElementById('currentYear');
+            if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
+            }
+
+            // --- Intersection Observer para activación progresiva ---
+            const fadeElements = document.querySelectorAll('.fade-in-section');
+            const observerOptions = {
+                root: null, 
+                threshold: 0.1, // Trigger when 10% of the element is visible
+                rootMargin: "0px 0px -50px 0px" // Start loading a bit before it's fully in view
+            };
+
+            const observer = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // observerInstance.unobserve(entry.target); // Optional: stop observing after first time
+                    }
+                });
+            }, observerOptions);
+
+            fadeElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

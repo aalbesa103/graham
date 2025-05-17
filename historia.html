@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1323,8 +1322,6 @@
             function showSlide(index) {
                 slides.forEach((slide, i) => {
                     if (i === index) {
-                        // The 'active' class sets display:flex.
-                        // Tailwind classes on the .slide div handle specific flex layouts (e.g., items-center, flex-col).
                         slide.classList.add('active');
                     } else {
                         slide.classList.remove('active');
@@ -1348,6 +1345,17 @@
                     slideCounterElement.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
                 }
             }
+            
+            // Function to handle hash changes and direct slide navigation
+            function handleHash() {
+                const hash = window.location.hash;
+                if (hash && hash.startsWith('#slide=')) {
+                    const slideNumber = parseInt(hash.substring('#slide='.length), 10);
+                    if (!isNaN(slideNumber) && slideNumber >= 1 && slideNumber <= slides.length) {
+                        currentSlide = slideNumber - 1; // Convert to 0-based index
+                    }
+                }
+            }
 
             if (prevBtn) {
                 prevBtn.addEventListener('click', () => {
@@ -1366,13 +1374,18 @@
                     }
                 });
             }
+            
+            // Listen for hash changes to allow navigation via back/forward buttons after initial load
+            window.addEventListener('hashchange', () => {
+                handleHash();
+                showSlide(currentSlide);
+            });
 
             // Initial setup
             if (slides.length > 0) {
-                // The first slide is already marked 'active' in HTML for initial display.
+                handleHash(); // Check for hash on initial load
                 showSlide(currentSlide); 
             } else {
-                // Handle case with no slides
                 if (prevBtn) prevBtn.style.display = 'none';
                 if (nextBtn) nextBtn.style.display = 'none';
                 if (slideCounterElement) slideCounterElement.style.display = 'none';

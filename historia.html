@@ -1,1 +1,1383 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operación Graham: Misión Cozzetti - Consolidado</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Global styles for the page */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0a192f; /* Base background for the page */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px; /* Space for the slide */
+            padding-bottom: 100px; /* Space for fixed navigation controls */
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .slide {
+            width: 1280px; /* Fixed width as per original */
+            min-height: 720px; /* Fixed min-height as per original */
+            background: linear-gradient(135deg, #0a192f 0%, #162a47 65%, #0c1f30 100%);
+            position: relative; 
+            overflow: hidden; 
+            font-family: 'Montserrat', sans-serif;
+            display: none; /* Initially hide all slides */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            /* Flex properties (e.g., flex-col, items-center) will be added by Tailwind classes directly on each slide div */
+        }
+        .slide.active {
+            display: flex !important; /* Primary way to show the slide, ensuring flex behavior */
+        }
+
+        /* Common styles extracted from original snippets */
+        .title {
+            font-family: 'Cinzel', serif;
+            color: #f7b731;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+        .subtitle { /* From slide 1 */
+            color: #e2e8f0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .text-content { /* Common across multiple slides */
+            color: #e2e8f0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(22, 78, 142, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(22, 78, 142, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0;
+        }
+        .corner-decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgba(247, 183, 49, 0.3);
+            z-index: 1;
+        }
+        .top-left { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+        .top-right { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+        
+        .content-wrapper { /* Common */
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Styles specific to Slide 1 */
+        .badge {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* More robust than fixed px for perfect circle */
+            background: rgba(22, 78, 142, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(247, 183, 49, 0.5);
+            z-index: 2;
+        }
+        .agent-silhouette { /* From slide 1 */
+            position: absolute;
+            bottom: 0;
+            right: 100px;
+            height: 400px; 
+            opacity: 0.7;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+            z-index: 1;
+            /* The icon inside (.fas.fa-user-secret.text-9xl) will be 8rem (128px) tall.
+               The div provides a 400px tall area. */
+        }
+
+        /* Styles specific to Slide 2 */
+        .mission-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-left: 4px solid #f7b731;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        .agent-icon { /* Used in Slide 2 */
+            background: rgba(247, 183, 49, 0.15);
+            border: 2px solid rgba(247, 183, 49, 0.5);
+        }
+        .classified-stamp {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            transform: rotate(15deg);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: rgba(220, 38, 38, 0.8);
+            border: 3px solid rgba(220, 38, 38, 0.8);
+            padding: 8px 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+
+        /* Styles specific to Slide 3 */
+        .skill-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+        }
+        .skill-icon { /* Used in Slide 3, distinct from .agent-icon */
+            background: rgba(247, 183, 49, 0.15);
+            border: 2px solid rgba(247, 183, 49, 0.5);
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f7b731, #f59e0b);
+            border-radius: 4px;
+        }
+        .training-bg {
+            position: absolute;
+            bottom: -50px;
+            right: -30px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(22, 78, 142, 0.3) 0%, rgba(10, 25, 47, 0) 70%);
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        /* Styles specific to Slide 4 */
+        .city-skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(0deg, rgba(10, 25, 47, 0.9) 0%, transparent 100%);
+            z-index: 1;
+        }
+        .building {
+            position: absolute;
+            bottom: 0;
+            background: #061020;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+        .window {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        .infiltration-scene {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(180deg, #061020 0%, #0a1930 100%);
+        }
+        .agent-path {
+            position: absolute;
+            width: 3px;
+            height: 180px;
+            background: linear-gradient(to bottom, transparent, #f7b731, transparent);
+            top: 80px;
+            left: 350px;
+            z-index: 3;
+            transform: rotate(30deg);
+        }
+        .agent-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #f7b731;
+            border-radius: 50%;
+            top: 170px;
+            left: 346px;
+            z-index: 4;
+            box-shadow: 0 0 10px #f7b731;
+            animation: pulse-slide4 2s infinite;
+        }
+        .moon {
+            position: absolute;
+            top: 50px;
+            right: 150px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #f0f4ff 30%, #cbd5e1 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px #cbd5e1;
+            z-index: 2;
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        @keyframes pulse-slide4 {
+            0% { box-shadow: 0 0 0 0 rgba(247, 183, 49, 0.8); }
+            70% { box-shadow: 0 0 0 10px rgba(247, 183, 49, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(247, 183, 49, 0); }
+        }
+        .info-card { /* Common class for S4, S5, S6 - ensure styles are compatible or make more specific */
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border-radius: 8px; /* Added for consistency */
+        }
+        .danger-factor { /* Used in S4 */
+            height: 8px;
+            background: rgba(185, 28, 28, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .danger-value { /* Used in S4, S5 */
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            border-radius: 4px;
+        }
+
+        /* Styles specific to Slide 5 */
+        .gas-container {
+            position: relative;
+            height: 320px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        }
+        .corridor {
+            position: relative;
+            height: 100%;
+            background: linear-gradient(180deg, #000, #0a1930);
+            perspective: 1000px;
+        }
+        .corridor-floor {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to bottom, transparent, rgba(22, 78, 142, 0.1));
+            transform: rotateX(60deg);
+            transform-origin: bottom;
+        }
+        .corridor-walls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            border-right: 2px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .gas-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+        }
+        .cyanide-gas {
+            background: radial-gradient(ellipse at center, transparent, rgba(173, 216, 230, 0));
+            animation: pulse-blue-slide5 4s infinite ease-in-out;
+        }
+        .sulfur-gas {
+            background: radial-gradient(ellipse at center, transparent, rgba(255, 255, 0, 0));
+            animation: pulse-yellow-slide5 4s infinite ease-in-out;
+            animation-delay: 2s;
+        }
+        @keyframes pulse-blue-slide5 {
+            0% { background: radial-gradient(ellipse at center, rgba(173, 216, 230, 0), transparent); }
+            50% { background: radial-gradient(ellipse at center, rgba(173, 216, 230, 0.15), transparent); }
+            100% { background: radial-gradient(ellipse at center, rgba(173, 216, 230, 0), transparent); }
+        }
+        @keyframes pulse-yellow-slide5 {
+            0% { background: radial-gradient(ellipse at center, rgba(255, 255, 0, 0), transparent); }
+            50% { background: radial-gradient(ellipse at center, rgba(255, 255, 0, 0.1), transparent); }
+            100% { background: radial-gradient(ellipse at center, rgba(255, 255, 0, 0), transparent); }
+        }
+        .slide5-gas-particle { /* Specific to slide 5 */
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            filter: blur(3px);
+        }
+        .blue-particle { background-color: #add8e6; box-shadow: 0 0 15px #add8e6; }
+        .yellow-particle { background-color: #ffff00; box-shadow: 0 0 15px #ffff00; }
+
+        .danger-level { /* Used in S5 */
+            height: 10px;
+            background: rgba(185, 28, 28, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        /* Removed .molecule-structure, .atom, .bond as per request */
+        .warning-pulse { animation: warning-pulse-slide5 2s infinite; }
+        @keyframes warning-pulse-slide5 {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Styles specific to Slide 6 */
+        .antidote {
+            position: relative;
+            width: 50px;
+            height: 120px;
+            background: linear-gradient(to bottom, rgba(0, 128, 255, 0.2), rgba(0, 200, 255, 0.6));
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+        }
+        .antidote:before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            width: 30px;
+            height: 20px;
+            background: rgba(200, 200, 200, 0.8);
+            border-radius: 15px 15px 0 0;
+        }
+        /* .law-banner REMOVED from slide 6 */
+        .slide6-gas-particle { /* Specific to slide 6 */
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.7;
+            filter: blur(2px);
+            animation: float-particle-slide6 10s infinite linear;
+        }
+        @keyframes float-particle-slide6 {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(10px, -10px); }
+            50% { transform: translate(0, -20px); }
+            75% { transform: translate(-10px, -10px); }
+            100% { transform: translate(0, 0); }
+        }
+        /* .equation REMOVED from slide 6 */
+        /* .square-root REMOVED from slide 6 */
+        .decision-panel {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(247, 183, 49, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .decision-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border-color: rgba(247, 183, 49, 0.8);
+        }
+        .calculation-step { /* Now used in slide 7 */
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+        .calculation-step:before { /* Now used in slide 7 */
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 20px;
+            height: 2px;
+            background: rgba(247, 183, 49, 0.6);
+            transform: translateY(-50%);
+        }
+        .pulse { /* Used in S6 and S7 */
+            animation: pulse-animation-s67 2s infinite;
+        }
+        @keyframes pulse-animation-s67 {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Styles specific to Slide 7 */
+        .success-card { /* Also an .info-card technically */
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border-radius: 8px;
+        }
+        @keyframes fade-in-s7 {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes rotate-s7 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animated-element {
+            animation: fade-in-s7 1s ease-out forwards;
+        }
+        .rotate { /* Used in S7 */
+            animation: rotate-s7 10s linear infinite;
+        }
+        .decision-arrow {
+            position: absolute;
+            height: 4px;
+            background: #10b981;
+            transform-origin: left center;
+        }
+        .decision-arrow.pointing-left {
+            transform-origin: right center; /* Change origin for left pointing */
+        }
+        .decision-arrow.pointing-left:after {
+            content: "";
+            position: absolute;
+            left: -10px; /* Adjusted for better arrow head position */
+            top: -8px; /* Adjusted for better arrow head position */
+            border-right: 15px solid #10b981; /* Arrow points left */
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: none; /* Remove original left border */
+        }
+        .decision-arrow:not(.pointing-left):after { /* Original right pointing arrow */
+            content: "";
+            position: absolute;
+            right: -10px; 
+            top: -8px; 
+            border-left: 15px solid #10b981; 
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .valve {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 5px solid #64748b;
+            position: relative;
+            transform: rotate(45deg); /* Initial rotation from original */
+        }
+        .valve:before { /* Horizontal bar of valve wheel */
+            content: "";
+            position: absolute;
+            width: 80%;
+            height: 10px;
+            background: #64748b;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+        }
+        .valve:after { /* Vertical bar of valve wheel */
+            content: "";
+            position: absolute;
+            height: 80%;
+            width: 10px;
+            background: #64748b;
+            left: 50%;
+            top: 10%;
+            transform: translateX(-50%);
+        }
+        .valve.closed {
+            background: #10b981; /* Green when closed */
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.7);
+            /* transform: rotate(0deg); /* Optionally change rotation when closed */
+        }
+        .valve.closed:before, .valve.closed:after {
+            background: #065f46; /* Darker green for bars when closed */
+        }
+        .mission-badge {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mission-badge:before { /* Outer pulsing border */
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid #10b981;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            animation: pulse-animation-s67 2s infinite; /* Re-use pulse from S6 */
+        }
+        .mission-badge:after { /* Inner rotating dashed border */
+            content: "";
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 2px dashed rgba(16, 185, 129, 0.7);
+            animation: rotate-s7 20s linear infinite; /* Re-use rotate from S7 */
+        }
+        .celebration-particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            opacity: 0.7;
+            /* No animation provided in original, can be added */
+        }
+        .quote-mark {
+            font-family: 'Georgia', serif;
+            font-size: 4em; /* Large quote mark */
+            line-height: 0.5; /* Adjust to pull text closer */
+            color: #f7b731; /* Match title color */
+            display: inline-block;
+            margin-right: 0.1em;
+        }
+
+
+        /* Navigation buttons styling */
+        .navigation-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px; /* Reduced padding */
+            background-color: rgba(10, 25, 47, 0.9); /* Darker, more opaque */
+            border-radius: 30px; /* Pill shape */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            margin-top: 20px;
+            position: fixed; /* Fixed at the bottom */
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000; /* Ensure they are on top */
+            border: 1px solid rgba(247, 183, 49, 0.3);
+        }
+        .nav-button {
+            background-color: #f7b731;
+            color: #0a192f;
+            border: none;
+            padding: 10px 20px; /* Adjusted padding */
+            margin: 0 8px; /* Adjusted margin */
+            border-radius: 20px; /* Pill shape buttons */
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 14px; /* Slightly smaller font */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 8px rgba(247, 183, 49, 0.3);
+            display: inline-flex; /* For icon alignment */
+            align-items: center;
+        }
+        .nav-button:hover {
+            background-color: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(247, 183, 49, 0.5);
+        }
+        .nav-button:disabled {
+            background-color: #3a4a60; /* Darker disabled color */
+            color: #7b8a9e;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        .nav-button .fas {
+            font-size: 12px; /* Icon size */
+        }
+        .slide-counter {
+            color: #e2e8f0;
+            font-size: 14px;
+            margin: 0 15px; /* Adjusted margin */
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide active flex items-center justify-center">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <div class="badge">
+            <i class="fas fa-shield-alt text-4xl text-yellow-500"></i>
+        </div>
+        
+        <div class="agent-silhouette">
+            <i class="fas fa-user-secret text-9xl text-blue-900" style="display: block; line-height: 400px; text-align: center;"></i>
+        </div>
+        
+        <div class="content-wrapper w-4/5 text-center">
+            <p class="text-blue-300 mb-4 text-xl tracking-wider">AGENCIA DE INTELIGENCIA PRESENTA</p>
+            <h1 class="title text-7xl mb-6">OPERACIÓN GRAHAM</h1>
+            <h2 class="title text-5xl mb-10">MISIÓN COZZETTI</h2>
+            <p class="subtitle text-xl mb-4">Cuando la ciencia se convierte en tu única arma</p>
+            <div class="flex justify-center mt-8">
+                <div class="px-5 py-3 border border-yellow-600 inline-flex items-center rounded-md"> <i class="fas fa-exclamation-triangle text-yellow-500 mr-3"></i>
+                    <span class="text-yellow-100">CLASIFICADO: MÁXIMO SECRETO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide flex flex-col">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <div class="classified-stamp">
+            Clasificado
+        </div>
+        
+        <div class="px-20 pt-16">
+            <h2 class="title text-5xl mb-2">MISIÓN ESPECIAL</h2>
+            <div class="w-32 h-1 bg-yellow-500 opacity-70 mb-6"></div>
+        </div>
+        
+        <div class="content-wrapper flex px-20 py-10 flex-grow"> <div class="w-1/3 pr-8 flex flex-col items-center">
+                <div class="agent-icon rounded-full w-48 h-48 flex items-center justify-center mb-6">
+                    <i class="fas fa-user-secret text-yellow-500 text-7xl"></i>
+                </div>
+                <h3 class="title text-3xl text-center mb-4">Oficial Máximo Cozzetti</h3>
+                <div class="bg-blue-900 bg-opacity-30 p-4 rounded-lg w-full"> <div class="flex items-center mb-3">
+                        <i class="fas fa-id-card text-blue-300 mr-3 w-5 text-center"></i> <span class="text-blue-100">AGENTE #42-7G</span>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-medal text-blue-300 mr-3 w-5 text-center"></i>
+                        <span class="text-blue-100">ESPECIALISTA EN INFILTRACIÓN</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt text-blue-300 mr-3 w-5 text-center"></i>
+                        <span class="text-blue-100">NIVEL: MÁXIMA CONFIANZA</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="w-2/3 pl-8">
+                <div class="mission-card p-6 mb-6 rounded-lg"> <h3 class="text-yellow-400 text-2xl mb-4">OBJETIVO PRINCIPAL</h3>
+                    <p class="text-content text-xl mb-4">Destrucción completa de laboratorio de armas químicas bajo control de agentes de KAOS.</p>
+                    <div class="flex items-center text-red-400 mb-6">
+                        <i class="fas fa-radiation mr-3"></i>
+                        <span>NIVEL DE AMENAZA: CRÍTICO</span>
+                    </div>
+                    <p class="text-content italic text-lg">"La tensión era palpable, pero Cozzetti, con su temple de acero, aceptó el desafío."</p>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <div class="bg-blue-900 bg-opacity-20 p-4 rounded-lg flex-1 flex items-center"> <i class="fas fa-flask text-red-400 text-3xl mr-4"></i>
+                        <div>
+                            <h4 class="text-yellow-200 font-bold">ARMAS QUÍMICAS</h4>
+                            <p class="text-blue-100 text-sm">Alta toxicidad • Potencialmente letales • Uso terrorista</p>
+                        </div>
+                    </div>
+                    <div class="bg-blue-900 bg-opacity-20 p-4 rounded-lg flex-1 flex items-center"> <i class="fas fa-skull-crossbones text-red-400 text-3xl mr-4"></i>
+                        <div>
+                            <h4 class="text-yellow-200 font-bold">ORGANIZACIÓN KAOS</h4>
+                            <p class="text-blue-100 text-sm">Grupo terrorista • Múltiples células • Alta peligrosidad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-auto px-20 py-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-clock text-yellow-500 mr-2"></i>
+                <span class="text-yellow-100">TIEMPO ESTIMADO: 48 HORAS</span>
+            </div>
+            <div class="text-sm text-blue-300">
+                OPERACIÓN GRAHAM • MISIÓN COZZETTI
+            </div>
+        </div>
+    </div>
+
+    <div class="slide flex flex-col">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        <div class="training-bg"></div>
+        
+        <div class="px-20 pt-16">
+            <h2 class="title text-5xl mb-2">ENTRENAMIENTO DE ÉLITE</h2>
+            <div class="w-40 h-1 bg-yellow-500 opacity-70 mb-6"></div>
+        </div>
+        
+        <div class="content-wrapper flex flex-col px-20 py-8 flex-grow"> <div class="bg-blue-900 bg-opacity-20 p-6 mb-10 border-l-4 border-yellow-500 rounded-r-lg"> <p class="text-content text-xl italic">"Fue entrenado con los mejores oficiales en todas las técnicas de infiltración, combate cuerpo a cuerpo y manejo de explosivos. Su precisión era legendaria, su astucia, inigualable."</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-8">
+                <div class="skill-card rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="skill-icon rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                            <i class="fas fa-user-ninja text-yellow-500 text-3xl"></i>
+                        </div>
+                        <h3 class="title text-2xl">INFILTRACIÓN</h3>
+                    </div>
+                    <ul class="mb-6 space-y-2"> <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Movimiento sigiloso</span>
+                        </li>
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Escalado de estructuras</span>
+                        </li>
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Acceso secreto</span>
+                        </li>
+                    </ul>
+                    <div class="mt-auto"> <div class="flex justify-between mb-1">
+                            <span class="text-sm text-blue-200">Nivel de maestría</span>
+                            <span class="text-sm text-yellow-400">98%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 98%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-card rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="skill-icon rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                            <i class="fas fa-fist-raised text-yellow-500 text-3xl"></i>
+                        </div>
+                        <h3 class="title text-2xl">COMBATE</h3>
+                    </div>
+                    <ul class="mb-6 space-y-2">
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Artes marciales avanzadas</span>
+                        </li>
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Desarme de oponentes</span>
+                        </li>
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Neutralización silenciosa</span>
+                        </li>
+                    </ul>
+                    <div class="mt-auto">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm text-blue-200">Nivel de maestría</span>
+                            <span class="text-sm text-yellow-400">95%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-card rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="skill-icon rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                            <i class="fas fa-bomb text-yellow-500 text-3xl"></i>
+                        </div>
+                        <h3 class="title text-2xl">EXPLOSIVOS</h3>
+                    </div>
+                    <ul class="mb-6 space-y-2">
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Demolición controlada</span>
+                        </li>
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Desactivación de bombas</span>
+                        </li>
+                        <li class="flex items-center text-blue-100">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span>Fabricación de cargas</span>
+                        </li>
+                    </ul>
+                    <div class="mt-auto">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm text-blue-200">Nivel de maestría</span>
+                            <span class="text-sm text-yellow-400">97%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 97%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-auto px-20 py-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-medal text-yellow-500 mr-2"></i>
+                <span class="text-yellow-100">AGENTE DE ÉLITE • MÁXIMA CAPACIDAD</span>
+            </div>
+            <div class="text-sm text-blue-300">
+                OPERACIÓN GRAHAM • MISIÓN COZZETTI
+            </div>
+        </div>
+    </div>
+
+    <div class="slide flex flex-col">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <div class="px-20 pt-16">
+            <h2 class="title text-5xl mb-2">LA INFILTRACIÓN ARRIESGADA</h2>
+            <div class="w-40 h-1 bg-yellow-500 opacity-70 mb-6"></div>
+        </div>
+        
+        <div class="content-wrapper flex flex-col px-20 py-4 z-10 flex-grow"> <div class="infiltration-scene mb-6">
+                <div class="moon"></div>
+                <div class="star" style="width: 2px; height: 2px; top: 80px; left: 120px;"></div>
+                <div class="star" style="width: 1px; height: 1px; top: 40px; left: 220px;"></div>
+                <div class="star" style="width: 3px; height: 3px; top: 60px; left: 570px;"></div>
+                <div class="star" style="width: 2px; height: 2px; top: 90px; left: 800px;"></div>
+                <div class="star" style="width: 1px; height: 1px; top: 50px; left: 950px;"></div>
+                
+                <div class="city-skyline"></div>
+                <div class="building" style="left: 100px; width: 100px; height: 200px;"></div>
+                <div class="building" style="left: 220px; width: 140px; height: 280px;"></div>
+                <div class="building" style="left: 380px; width: 180px; height: 320px;"></div>
+                <div class="building" style="left: 580px; width: 150px; height: 250px;"></div>
+                <div class="building" style="left: 750px; width: 200px; height: 300px;"></div>
+                <div class="building" style="left: 970px; width: 120px; height: 220px;"></div>
+                
+                <div class="window" style="left: 250px; top: 100px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 280px; top: 130px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 250px; top: 160px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 280px; top: 190px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 250px; top: 220px; width: 15px; height: 15px;"></div>
+                
+                <div class="window" style="left: 410px; top: 80px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 440px; top: 80px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 470px; top: 80px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 410px; top: 110px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 440px; top: 110px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 470px; top: 110px; width: 15px; height: 15px;"></div>
+                
+                <div class="window" style="left: 610px; top: 120px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 640px; top: 120px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 610px; top: 150px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 640px; top: 150px; width: 15px; height: 15px;"></div>
+                
+                <div class="window" style="left: 800px; top: 90px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 830px; top: 90px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 860px; top: 90px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 800px; top: 120px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 830px; top: 120px; width: 15px; height: 15px;"></div>
+                <div class="window" style="left: 860px; top: 120px; width: 15px; height: 15px;"></div>
+                
+                <div class="agent-path"></div>
+                <div class="agent-dot"></div>
+            </div>
+            
+            <div class="flex gap-6">
+                <div class="info-card rounded-lg p-6 flex-1">
+                    <h3 class="title text-xl mb-4">INFILTRACIÓN EN CURSO</h3>
+                    <ul class="mb-4 space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-angle-right text-yellow-500 mt-1 mr-3"></i>
+                            <span class="text-blue-100">Deslizamiento sigiloso por la cornisa del edificio a <span class="text-yellow-400">78 metros</span> de altura</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-angle-right text-yellow-500 mt-1 mr-3"></i>
+                            <span class="text-blue-100">Viento helado de la noche: <span class="text-yellow-400">-3°C</span>, velocidad <span class="text-yellow-400">24 km/h</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-angle-right text-yellow-500 mt-1 mr-3"></i>
+                            <span class="text-blue-100">Visibilidad reducida por niebla parcial</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-angle-right text-yellow-500 mt-1 mr-3"></i>
+                            <span class="text-blue-100">Objetivo: acceso por conducto de ventilación Este</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="info-card rounded-lg p-6 flex-1">
+                    <h3 class="title text-xl mb-4">EVALUACIÓN DE RIESGOS</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-blue-200">Detección por guardias</span>
+                                <span class="text-sm text-yellow-400">32%</span>
+                            </div>
+                            <div class="danger-factor">
+                                <div class="danger-value" style="width: 32%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-blue-200">Caída desde la cornisa</span>
+                                <span class="text-sm text-yellow-400">65%</span>
+                            </div>
+                            <div class="danger-factor">
+                                <div class="danger-value" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-blue-200">Fallo del equipo</span>
+                                <span class="text-sm text-yellow-400">18%</span>
+                            </div>
+                            <div class="danger-factor">
+                                <div class="danger-value" style="width: 18%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-blue-200">Exposición a sistemas de seguridad</span>
+                                <span class="text-sm text-yellow-400">47%</span>
+                            </div>
+                            <div class="danger-factor">
+                                <div class="danger-value" style="width: 47%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-900 bg-opacity-20 p-6 mt-6 border-l-4 border-yellow-500 w-full rounded-r-lg"> <p class="text-content text-xl italic">"Se deslizó por la cornisa del edificio. El viento helado de la noche era su única compañía mientras avanzaba centímetro a centímetro, el abismo a sus pies y la silueta de la ciudad extendiéndose como una promesa silenciosa."</p>
+            </div>
+        </div>
+        
+        <div class="mt-auto px-20 py-6 flex justify-between items-center z-10">
+            <div class="flex items-center">
+                <i class="fas fa-clock text-yellow-500 mr-2"></i>
+                <span class="text-yellow-100">HORA DE INFILTRACIÓN: 02:37</span>
+            </div>
+            <div class="text-sm text-blue-300">
+                OPERACIÓN GRAHAM • MISIÓN COZZETTI
+            </div>
+        </div>
+    </div>
+
+    <div class="slide flex flex-col">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <div class="px-20 pt-16">
+            <h2 class="title text-5xl mb-2">EL PASILLO DE LOS AROMAS LETALES</h2>
+            <div class="w-40 h-1 bg-yellow-500 opacity-70 mb-6"></div>
+        </div>
+        
+        <div class="content-wrapper flex flex-col px-20 py-4 z-10 flex-grow"> <div class="gas-container mb-6">
+                <div class="corridor">
+                    <div class="corridor-floor"></div>
+                    <div class="corridor-walls"></div>
+                    
+                    <div class="gas-animation cyanide-gas"></div>
+                    <div class="gas-animation sulfur-gas"></div>
+                    
+                    <div class="slide5-gas-particle blue-particle" style="top: 30%; left: 20%; width: 5px; height: 5px;"></div>
+                    <div class="slide5-gas-particle blue-particle" style="top: 45%; left: 35%; width: 8px; height: 8px;"></div>
+                    <div class="slide5-gas-particle blue-particle" style="top: 60%; left: 25%; width: 6px; height: 6px;"></div>
+                    <div class="slide5-gas-particle blue-particle" style="top: 70%; left: 40%; width: 7px; height: 7px;"></div>
+                    <div class="slide5-gas-particle blue-particle" style="top: 50%; left: 15%; width: 4px; height: 4px;"></div>
+                    
+                    <div class="slide5-gas-particle yellow-particle" style="top: 40%; left: 60%; width: 6px; height: 6px;"></div>
+                    <div class="slide5-gas-particle yellow-particle" style="top: 55%; left: 75%; width: 8px; height: 8px;"></div>
+                    <div class="slide5-gas-particle yellow-particle" style="top: 65%; left: 65%; width: 5px; height: 5px;"></div>
+                    <div class="slide5-gas-particle yellow-particle" style="top: 75%; left: 80%; width: 7px; height: 7px;"></div>
+                    <div class="slide5-gas-particle yellow-particle" style="top: 45%; left: 85%; width: 4px; height: 4px;"></div>
+                    
+                    <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 40px; background: rgba(0,0,0,0.8); border-radius: 5px 5px 0 0;"></div>
+                    
+                    <div class="absolute top-6 left-6 bg-red-900 bg-opacity-40 p-2 rounded-md border border-red-500 flex items-center warning-pulse">
+                        <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                        <span class="text-red-300 text-sm">TOXINAS DETECTADAS</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-6">
+                <div class="info-card rounded-lg p-6 flex-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-900 mr-3">
+                            <i class="fas fa-flask text-blue-200"></i>
+                        </div>
+                        <h3 class="title text-xl">CIANURO (HCN)</h3>
+                    </div>
+                                        
+                    <ul class="mb-4 space-y-3 pt-4"> <li class="flex items-start">
+                            <i class="fas fa-skull text-yellow-500 mt-1 mr-3 w-5 text-center"></i>
+                            <span class="text-blue-100">Olor característico: <span class="text-yellow-400">almendras amargas</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-weight text-yellow-500 mt-1 mr-3 w-5 text-center"></i>
+                            <span class="text-blue-100">Masa molar: <span class="text-yellow-400">27 g/mol</span></span>
+                        </li>
+                        </ul>
+                    
+                    <div class="mt-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm text-blue-200">Letalidad</span>
+                            <span class="text-sm text-red-400">95%</span>
+                        </div>
+                        <div class="danger-level">
+                            <div class="danger-value" style="width: 95%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card rounded-lg p-6 flex-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center bg-yellow-900 mr-3">
+                            <i class="fas fa-biohazard text-yellow-200"></i>
+                        </div>
+                        <h3 class="title text-xl">SULFURO DE HIDRÓGENO (H₂S)</h3>
+                    </div>
+                                        
+                    <ul class="mb-4 space-y-3 pt-4"> <li class="flex items-start">
+                            <i class="fas fa-egg text-yellow-500 mt-1 mr-3 w-5 text-center"></i>
+                            <span class="text-blue-100">Olor característico: <span class="text-yellow-400">huevo podrido</span></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-weight text-yellow-500 mt-1 mr-3 w-5 text-center"></i>
+                            <span class="text-blue-100">Masa molar: <span class="text-yellow-400">34 g/mol</span></span>
+                        </li>
+                        </ul>
+                    
+                    <div class="mt-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm text-blue-200">Letalidad</span>
+                            <span class="text-sm text-red-400">92%</span>
+                        </div>
+                        <div class="danger-level">
+                            <div class="danger-value" style="width: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-900 bg-opacity-20 p-6 mt-6 border-l-4 border-yellow-500 w-full rounded-r-lg"> <p class="text-content text-xl">"El aire le trajo dos olores <span class="text-yellow-400 font-bold">simultáneamente</span>: uno, dulzón, a almendras amargas. Cianuro. El otro, inconfundible: huevo podrido. Sulfuro de hidrógeno. Ambos letales. Ambos en el aire. Ambos... activos."</p>
+            </div>
+        </div>
+        
+        <div class="mt-auto px-20 py-6 flex justify-between items-center z-10">
+            <div class="flex items-center">
+                <i class="fas fa-radiation-alt text-yellow-500 mr-2 animate-pulse"></i>
+                <span class="text-yellow-100">NIVELES TÓXICOS CRÍTICOS</span>
+            </div>
+            <div class="text-sm text-blue-300">
+                OPERACIÓN GRAHAM • MISIÓN COZZETTI
+            </div>
+        </div>
+    </div>
+
+    <div class="slide flex flex-col">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <div class="px-20 pt-16">
+            <h2 class="title text-5xl mb-2">UN ANTÍDOTO, DOS AMENAZAS</h2>
+            <div class="w-40 h-1 bg-yellow-500 opacity-70 mb-6"></div>
+        </div>
+        
+        <div class="content-wrapper flex flex-col px-20 py-10 z-10 flex-grow items-center justify-center"> <div class="flex gap-8 mb-8 w-full max-w-4xl"> <div class="info-card p-6 flex-1 flex flex-col items-center justify-center">
+                    <div class="antidote mb-4 pulse"></div>
+                    <h3 class="title text-xl text-center mb-3">UN ÚNICO ANTÍDOTO</h3>
+                    <p class="text-center text-blue-200 text-lg">Restricción presupuestaria:<br>Un antídoto para dos amenazas</p>
+                    <div class="flex items-center justify-center mt-4">
+                        <i class="fas fa-hourglass-half text-yellow-500 text-xl animate-pulse mr-3"></i>
+                        <span class="text-red-300">Segundos para decidir</span>
+                    </div>
+                </div>
+                
+                <div class="info-card p-6 flex-1">
+                    <h3 class="title text-xl mb-4">EL DILEMA</h3>
+                    
+                    <div class="flex items-start mb-4">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center bg-blue-900 mr-3 flex-shrink-0">
+                            <i class="fas fa-question text-blue-200 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-yellow-400 text-lg mb-2">¿Hacia dónde correr?</h4>
+                            <p class="text-blue-100">Cozzetti debe cerrar una de las válvulas de gas antes de que las concentraciones letales lo alcancen.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 mt-6">
+                        <div class="w-1/2 text-center p-3 decision-panel rounded-lg">
+                            <i class="fas fa-flask text-blue-400 text-xl mb-2"></i>
+                            <p class="text-yellow-300">¿Válvula de Cianuro?</p>
+                            <p class="text-sm text-blue-200">Olor a almendras</p>
+                        </div>
+                        <div class="w-1/2 text-center p-3 decision-panel rounded-lg">
+                            <i class="fas fa-biohazard text-yellow-400 text-xl mb-2"></i>
+                            <p class="text-yellow-300">¿Válvula de Sulfuro?</p>
+                            <p class="text-sm text-blue-200">Olor a huevo podrido</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-card p-6 w-full max-w-4xl mt-8"> 
+                <h3 class="title text-xl mb-4 text-center">LA ENCRUCIJADA</h3>
+                <p class="text-green-300 text-lg font-bold text-center mb-6">Decisión Crítica: Neutralizar la amenaza más cercana.</p>
+                <div class="relative border border-blue-800 rounded-lg overflow-hidden" style="height:250px;">
+                    <div class="absolute top-0 left-0 w-full h-full bg-blue-900 bg-opacity-20 flex items-center justify-around">
+                        
+                        <div class="flex flex-col items-center p-4">
+                            <div class="slide6-gas-particle mb-2" style="background: rgba(173, 216, 230, 0.7); box-shadow: 0 0 10px #add8e6; width: 25px; height: 25px;"></div>
+                            <div class="text-center">
+                                <p class="text-blue-200 text-sm">Válvula HCN</p>
+                                <p class="text-xs text-gray-400">(Almendras)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-20 bg-gray-800 rounded-t-md flex items-center justify-center mb-2">
+                                <i class="fas fa-user-secret text-white text-4xl"></i>
+                            </div>
+                            <i class="fas fa-question text-yellow-400 text-6xl animate-pulse"></i>
+                             <p class="text-xs text-gray-400 mt-1">Cozzetti</p>
+                        </div>
+                        
+                        <div class="flex flex-col items-center p-4">
+                            <div class="slide6-gas-particle mb-2" style="background: rgba(255, 255, 0, 0.7); box-shadow: 0 0 10px #ffff00; width: 25px; height: 25px;"></div>
+                            <div class="text-center">
+                                <p class="text-yellow-200 text-sm">Válvula H₂S</p>
+                                <p class="text-xs text-gray-400">(Huevo Podrido)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-auto px-20 py-6 flex justify-between items-center z-10">
+            <div class="flex items-center">
+                <i class="fas fa-brain text-yellow-500 mr-2"></i>
+                <span class="text-yellow-100">DECISIÓN BAJO PRESIÓN</span>
+            </div>
+            <div class="text-sm text-blue-300">
+                OPERACIÓN GRAHAM • MISIÓN COZZETTI
+            </div>
+        </div>
+    </div>
+
+    <div class="slide flex flex-col">
+        <div class="grid-pattern"></div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <div class="px-20 pt-16">
+            <h2 class="title text-5xl mb-2">EL DESENLACE</h2>
+            <div class="w-40 h-1 bg-yellow-500 opacity-70 mb-6"></div>
+        </div>
+        
+        <div class="content-wrapper flex flex-col px-20 py-4 z-10 flex-grow"> 
+
+            <div class="info-card p-6 mb-8 animated-element" style="animation-delay: 0.1s;">
+                <h3 class="title text-2xl mb-4 text-center">LA SOLUCIÓN: CÁLCULO BAJO PRESIÓN</h3>
+                <div class="calculation-step">
+                    <p class="text-blue-200"><span class="text-yellow-400">HCN</span> (Cianuro): Masa molar = 27 g/mol (Gas más ligero, difusión más rápida)</p>
+                </div>
+                <div class="calculation-step">
+                    <p class="text-blue-200"><span class="text-yellow-400">H₂S</span> (Sulfuro): Masa molar = 34 g/mol (Gas más pesado, difusión más lenta)</p>
+                </div>
+                <div class="calculation-step">
+                    <p class="text-blue-200">Percepción: Detecta <span class="text-yellow-400">ambos olores simultáneamente</span>.</p>
+                </div>
+                <div class="calculation-step">
+                    <p class="text-blue-200">Conclusión (Ley de Graham): Para que ambos olores lleguen al mismo tiempo, la fuente del gas más pesado (<span class="text-yellow-400">H₂S</span>) debe estar <span class="text-yellow-400">más cerca</span>. La del gas ligero (<span class="text-yellow-400">HCN</span>) debe estar <span class="text-yellow-400">más lejos</span>.</p>
+                </div>
+            </div>
+            
+            <div class="success-card p-8 mb-8 animated-element" style="animation-delay: 0.3s;">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center bg-blue-900 mr-4 flex-shrink-0">
+                        <i class="fas fa-running text-blue-200 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-yellow-400 text-3xl font-bold">LA DECISIÓN</h3>
+                        <p class="text-blue-200 text-xl mt-2">Corrió hacia el olor a <span class="text-yellow-400 font-bold">huevo podrido (H₂S)</span>.</p>
+                    </div>
+                </div>
+                
+                <div class="relative h-32 mb-8">
+                    <div class="absolute top-1/2 right-1/4 transform -translate-y-1/2 flex items-center">
+                         <div class="decision-arrow pointing-left mr-5" style="width: 200px;"></div>
+                        <div class="bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center z-10">
+                            <i class="fas fa-user-secret text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-1/2 left-1/4 transform -translate-y-1/2 flex flex-col items-center">
+                        <div class="valve closed"></div>
+                        <div class="mt-4 text-center">
+                            <p class="text-blue-100">Válvula H₂S</p>
+                            <p class="text-yellow-400 text-sm">Cerrada a tiempo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-1/2 right-1/4 transform -translate-y-1/2 opacity-40 flex flex-col items-center">
+                        <div class="valve"></div>
+                        <div class="mt-4 text-center">
+                            <p class="text-blue-100">Válvula HCN</p>
+                            <p class="text-red-400 text-sm">No elegida</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-8 mb-8">
+                <div class="w-1/3 flex justify-center animated-element" style="animation-delay: 0.5s;">
+                    <div class="mission-badge">
+                        <div class="text-green-400 text-4xl font-bold text-center z-10">MISIÓN<br>CUMPLIDA</div>
+                    </div>
+                </div>
+                
+                <div class="w-2/3 success-card p-8 animated-element" style="animation-delay: 0.7s;">
+                    <h3 class="title text-3xl mb-6">¡SOBREVIVIÓ!</h3>
+                    
+                    <div class="mb-6">
+                        <p class="text-green-300 text-2xl font-bold mb-2">La ciencia salvó al agente</p>
+                        <p class="text-blue-100 text-lg">Gracias a la correcta aplicación de la Ley de Graham, Cozzetti logró identificar la <span class="text-yellow-400">fuente más cercana</span> y neutralizar la amenaza a tiempo.</p>
+                    </div>
+                    
+                    <div class="bg-blue-900 bg-opacity-20 p-5 rounded-lg border-l-4 border-yellow-500">
+                        <p class="text-blue-200 text-lg italic"><span class="quote-mark">"</span>A veces, el conocimiento científico es el arma más poderosa de un agente.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="success-card p-6 text-center animated-element" style="animation-delay: 0.9s;">
+                <div class="flex justify-center items-center gap-6 md:gap-10 flex-wrap"> <div class="flex items-center">
+                        <i class="fas fa-award text-yellow-500 text-3xl md:text-4xl mr-3 md:mr-4"></i>
+                        <p class="text-blue-100 text-md md:text-lg">Gracias, Sr. Graham</p>
+                    </div>
+                    <div class="h-12 w-px bg-blue-700 hidden md:block"></div> <div class="flex items-center">
+                        <i class="fas fa-graduation-cap text-yellow-500 text-3xl md:text-4xl mr-3 md:mr-4"></i>
+                        <p class="text-blue-100 text-md md:text-lg">Gracias, profesora de química</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="celebration-particle" style="background: #10b981; top: 20%; left: 10%;"></div>
+            <div class="celebration-particle" style="background: #f7b731; top: 30%; right: 15%;"></div>
+            <div class="celebration-particle" style="background: #10b981; bottom: 40%; right: 25%;"></div>
+            <div class="celebration-particle" style="background: #f7b731; bottom: 30%; left: 20%;"></div>
+        </div>
+        
+        <div class="mt-auto px-20 py-6 flex justify-between items-center z-10">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                <span class="text-green-300">OPERACIÓN EXITOSA</span>
+            </div>
+            <div class="text-sm text-blue-300">
+                FIN DE LA MISIÓN • OPERACIÓN GRAHAM
+            </div>
+        </div>
+    </div>
+
+
+    <div class="navigation-controls">
+        <button id="prevBtn" class="nav-button">
+            <i class="fas fa-arrow-left mr-2"></i>Anterior
+        </button>
+        <span id="slideCounter" class="slide-counter"></span>
+        <button id="nextBtn" class="nav-button">
+            Siguiente<i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounterElement = document.getElementById('slideCounter');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    if (i === index) {
+                        // The 'active' class sets display:flex.
+                        // Tailwind classes on the .slide div handle specific flex layouts (e.g., items-center, flex-col).
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+                updateNavButtons();
+                updateSlideCounter();
+            }
+
+            function updateNavButtons() {
+                if (prevBtn) {
+                    prevBtn.disabled = currentSlide === 0;
+                }
+                if (nextBtn) {
+                    nextBtn.disabled = currentSlide === slides.length - 1;
+                }
+            }
+
+            function updateSlideCounter() {
+                if (slideCounterElement) {
+                    slideCounterElement.textContent = `Diapositiva ${currentSlide + 1} de ${slides.length}`;
+                }
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (currentSlide > 0) {
+                        currentSlide--;
+                        showSlide(currentSlide);
+                    }
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if (currentSlide < slides.length - 1) {
+                        currentSlide++;
+                        showSlide(currentSlide);
+                    }
+                });
+            }
+
+            // Initial setup
+            if (slides.length > 0) {
+                // The first slide is already marked 'active' in HTML for initial display.
+                showSlide(currentSlide); 
+            } else {
+                // Handle case with no slides
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (slideCounterElement) slideCounterElement.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

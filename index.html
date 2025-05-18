@@ -1254,34 +1254,27 @@
                     <div class="flex mt-8 mx-auto max-w-5xl">
                         <div class="w-3/5 pr-6">
                             <div class="inverse-relation"> {/* Contenedor para el gráfico y partículas */}
-                                {/* Ejes definidos por CSS */}
+                               
                                 <div class="axis x-axis"></div>
                                 <div class="axis y-axis"></div>
                                 
-                                {/* Contenedor de la curva SVG, posicionado para coincidir con los ejes */}
+                               
                                 <div class="curve">
                                     <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                        {/* RUTA CORREGIDA Y AJUSTADA */}
+                               
                                         <path d="M 5,5 Q 25,75 95,95" class="curve-line"></path>
-                                        {/* Explicación de la ruta:
-                                             M 5,5: Mover al punto de inicio (X bajo, Y bajo en SVG).
-                                                    Visualmente: Baja Masa Molar, Alta Velocidad.
-                                             Q 25,75: Punto de control para la forma de la curva descendente.
-                                             95,95: Mover al punto final (X alto, Y alto en SVG).
-                                                    Visualmente: Alta Masa Molar, Baja Velocidad.
-                                        */}
                                     </svg>
                                 </div>
 
-                                {/* Etiquetas de los ejes */}
+                               
                                 <div class="axis-label" style="bottom: 20px; left: 50%; transform: translateX(-50%);">Masa Molar (g/mol) →</div>
                                 <div class="axis-label" style="top: 45%; left: 10px; transform: translateY(-50%) rotate(-90deg);">Velocidad de Efusión ↑</div>
                                 
-                                {/* Partículas animadas (su animación es horizontal, no sigue la curva SVG) */}
+                               
                                 <div class="particle light"></div>
                                 <div class="particle heavy"></div>
                                 
-                                {/* Leyenda de las partículas */}
+                               
                                 <div class="absolute top-4 right-4 bg-white bg-opacity-80 px-3 py-2 rounded-lg shadow-sm text-sm">
                                     <div class="flex items-center">
                                         <span class="inline-block w-4 h-4 bg-blue-500 rounded-full mr-2"></span>

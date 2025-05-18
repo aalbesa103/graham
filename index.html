@@ -1265,37 +1265,93 @@
         </div> <!-- Fin de #slide8_nn -->
 
         <!-- SLIDE 9 (antes Slide 5): La Ley de Graham - Enunciado -->
-                        <div class="w-3/5 pr-6">
-                            <div class="inverse-relation">
-                                <div class="axis x-axis"></div>
-                                <div class="axis y-axis"></div>
-                                <div class="curve">
-                                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                        <!-- RUTA CORREGIDA -->
-                                        <path d="M 5,5 Q 30,60 95,95" class="curve-line"></path>
-                                        <!-- He ajustado ligeramente los puntos para que se vea mejor dentro del cuadro 100x100
-                                             M 5,5: Comienza alto en Y (velocidad) y bajo en X (masa)
-                                             Q 30,60: Punto de control para la curvatura
-                                             95,95: Termina bajo en Y (velocidad) y alto en X (masa)
-                                        -->
-                                    </svg>
+<div id="slide9_nn" class="slide-content">
+        <div class="slide flex flex-col items-center justify-start">
+            <div class="molecules">
+                <div class="molecule bg-blue-300" style="width: 40px; height: 40px; top: 10%; left: 20%; animation-delay: 0s;"></div>
+                <div class="molecule bg-yellow-400" style="width: 30px; height: 30px; top: 70%; left: 40%; animation-delay: 1s;"></div>
+                <div class="molecule bg-teal-400" style="width: 35px; height: 35px; top: 30%; left: 70%; animation-delay: 2s;"></div>
+                <div class="molecule bg-blue-400" style="width: 25px; height: 25px; top: 60%; left: 85%; animation-delay: 3s;"></div>
+                <div class="molecule bg-yellow-300" style="width: 45px; height: 45px; top: 15%; left: 50%; animation-delay: 4s;"></div>
+            </div>
+            <div class="content-wrapper w-full px-12 py-8 relative z-10">
+                <h1 class="title font-bold mb-8 text-center">¿Qué Establece la Ley de Graham?</h1>
+                <div class="law-box bg-gradient-to-r from-blue-50 to-teal-50 p-6 mx-auto max-w-4xl text-center">
+                    <p class="text-2xl text-blue-800 font-semibold italic mb-2">
+                        "A temperatura y presión constantes, la velocidad de efusión (o difusión) de un gas es inversamente proporcional a la raíz cuadrada de su masa molar."
+                    </p>
+                    <div class="formula text-3xl my-4 italic">
+                        <span class="text-blue-700">v ∝ </span>
+                        <span class="text-blue-700">1/√M</span>
+                    </div>
+                    <div class="text-lg text-blue-600">Donde v es la velocidad de efusión o difusión y M es la masa molar</div>
+                </div>
+                <div class="flex mt-8 mx-auto max-w-5xl">
+                    <div class="w-3/5 pr-6">
+                        <div class="inverse-relation">
+                            <div class="axis x-axis"></div>
+                            <div class="axis y-axis"></div>
+                            <div class="curve">
+                                <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <path d="M 1,99 Q 25,40 99,10" class="curve-line"></path>
+                                </svg>
+                            </div>
+                            <div class="axis-label" style="bottom: 20px; left: 50%; transform: translateX(-50%);">Masa Molar (g/mol)</div>
+                            <div class="axis-label" style="top: 50%; left: 20px; transform: translateY(-50%) rotate(-90deg);">Velocidad de Efusión</div>
+                            <div class="particle light"></div>
+                            <div class="particle heavy"></div>
+                            <div class="absolute top-4 right-4 bg-white bg-opacity-80 px-3 py-2 rounded-lg shadow-sm text-sm">
+                                <div class="flex items-center">
+                                    <span class="inline-block w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+                                    <span>Gas ligero (menor masa)</span>
                                 </div>
-                                <div class="axis-label" style="bottom: 20px; left: 50%; transform: translateX(-50%);">Masa Molar (g/mol) →</div>
-                                <div class="axis-label" style="top: 45%; left: 10px; transform: translateY(-50%) rotate(-90deg);">Velocidad de Efusión →</div>
-                                <div class="particle light"></div> <!-- Debería estar cerca del inicio de la curva (alta velocidad) -->
-                                <div class="particle heavy"></div> <!-- Debería estar cerca del final de la curva (baja velocidad) -->
-                                <div class="absolute top-4 right-4 bg-white bg-opacity-80 px-3 py-2 rounded-lg shadow-sm text-sm">
-                                    <div class="flex items-center">
-                                        <span class="inline-block w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
-                                        <span>Gas ligero (menor masa, alta velocidad)</span>
-                                    </div>
-                                    <div class="flex items-center mt-1">
-                                        <span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-2"></span>
-                                        <span>Gas pesado (mayor masa, baja velocidad)</span>
-                                    </div>
+                                <div class="flex items-center mt-1">
+                                    <span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-2"></span>
+                                    <span>Gas pesado (mayor masa)</span>
                                 </div>
                             </div>
-                        </div> <!-- Fin de #slide9_nn -->
+                        </div>
+                    </div>
+                    <div class="w-2/5 space-y-5">
+                        <div class="card p-5">
+                            <div class="mb-2 text-xl font-bold text-blue-700">
+                                <i class="fas fa-lightbulb mr-2 text-yellow-400"></i>En palabras más sencillas
+                            </div>
+                            <ul class="list-disc pl-6 space-y-3">
+                                <li class="text-lg">
+                                    <span class="font-semibold text-blue-800">Los gases más ligeros</span> 
+                                    (menor masa molar) se mueven (efunden/difunden) 
+                                    <span class="font-semibold text-blue-800">más rápido</span>.
+                                </li>
+                                <li class="text-lg">
+                                    <span class="font-semibold text-blue-800">Los gases más pesados</span> 
+                                    (mayor masa molar) se mueven 
+                                    <span class="font-semibold text-blue-800">más lento</span>.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card p-5">
+                            <div class="mb-2 text-xl font-bold text-blue-700">
+                                <i class="fas fa-flask mr-2 text-green-500"></i>Ejemplo numérico
+                            </div>
+                            <p class="mb-3">
+                                Si comparamos dos gases, uno con masa molar 4 veces mayor que el otro:
+                            </p>
+                            <div class="bg-blue-50 p-3 rounded-lg text-center">
+                                <div class="text-lg font-semibold mb-2">El gas más ligero se moverá:</div>
+                                <div class="text-3xl font-bold text-blue-700">
+                                    2 veces más rápido
+                                </div>
+                                <div class="italic text-sm text-blue-600 mt-2">
+                                    (porque √4 = 2)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- Fin de #slide9_nn --> <!-- Fin de #slide9_nn -->
 
         <!-- SLIDE 10 (antes Slide 6): Base Teórica - TCM -->
         <div id="slide10_nn" class="slide-content">

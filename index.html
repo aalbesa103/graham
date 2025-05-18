@@ -2018,6 +2018,7 @@
         </div> <!-- Fin de #slide14_nn -->
 
         <!-- SLIDE 15 (antes Slide 11): Demostración Clásica - Experimento HCl y NH₃ -->
+                <!-- SLIDE 15 (antes Slide 11): Demostración Clásica - Experimento HCl y NH₃ -->
         <div id="slide15_nn" class="slide-content">
             <div class="slide flex flex-col items-center justify-start">
                 <div class="molecules">
@@ -2028,14 +2029,14 @@
                     <div class="molecule bg-green-300" style="width: 45px; height: 45px; top: 15%; left: 50%; animation-delay: 4s;"></div>
                 </div>
                 <div class="content-wrapper w-full px-12 py-8 relative z-10">
-                    <h1 class="title font-bold mb-6 text-center">Demostración Clásica - Experimento de HCl y NH₃</h1>
+                    <h1 class="title font-bold mb-6 text-center">Demostración Clásica: Experimento HCl y NH₃</h1>
                     <div class="card p-6 mb-6">
                         <div class="relative h-48 mb-8">
                             <div class="tube">
                                 <div class="diffusion-hcl"></div>
                                 <div class="diffusion-nh3"></div>
-                                <div class="cotton cotton-left"></div>
-                                <div class="cotton cotton-right"></div>
+                                <div class="cotton cotton-left"></div> <!-- Simula algodón con HCl -->
+                                <div class="cotton cotton-right"></div> <!-- Simula algodón con NH3 -->
                                 <div class="ring"></div>
                                 <div class="gas-molecule hcl-molecule" style="width: 10px; height: 10px; top: 40%;"></div>
                                 <div class="gas-molecule hcl-molecule" style="width: 8px; height: 8px; top: 50%; animation-delay: 0.5s;"></div>
@@ -2058,11 +2059,12 @@
                                     </div>
                                     <div class="ml-4">
                                         <h3 class="text-lg font-bold text-red-800">HCl (Ácido Clorhídrico)</h3>
-                                        <div class="flex items-center mt-2">
+                                        <p class="text-sm">Algodón con sol. HCl concentrado</p>
+                                        <div class="flex items-center mt-1">
                                             <i class="fas fa-weight text-red-600 mr-2"></i>
                                             <div><span class="font-bold">Masa Molar:</span> 36.5 g/mol</div>
                                         </div>
-                                        <div class="mt-2">
+                                        <div class="mt-1">
                                             <span class="font-bold">Gas más pesado</span> → <span class="font-bold text-red-600">Difusión más lenta</span>
                                         </div>
                                     </div>
@@ -2075,13 +2077,13 @@
                                     </div>
                                     <div class="ml-4">
                                         <h3 class="text-lg font-bold text-gray-800">NH₄Cl (Cloruro de Amonio)</h3>
-                                        <p class="mt-2">Se forma cuando los gases HCl y NH₃ reaccionan:</p>
-                                        <div class="formula bg-white p-2 rounded text-center mt-2"> <!-- Usando clase .formula para el estilo -->
-                                            <span class="font-bold">HCl + NH₃ → NH₄Cl</span>
+                                        <p class="mt-1">Reacción: <span class="font-bold">NH₃(g) + HCl(g) → NH₄Cl(s)</span></p>
+                                        <div class="formula bg-white p-1 rounded text-center mt-1 text-sm">
+                                            Formación de <span class="font-bold">humo blanco</span>
                                         </div>
-                                        <div class="mt-2 text-center">
+                                        <div class="mt-1 text-center">
                                             <i class="fas fa-long-arrow-alt-down text-gray-600"></i>
-                                            <p class="text-sm">Anillo blanco visible</p>
+                                            <p class="text-xs">Anillo visible donde se encuentran</p>
                                         </div>
                                     </div>
                                 </div>
@@ -2093,11 +2095,12 @@
                                     </div>
                                     <div class="ml-4">
                                         <h3 class="text-lg font-bold text-green-800">NH₃ (Amoníaco)</h3>
-                                        <div class="flex items-center mt-2">
+                                        <p class="text-sm">Algodón con sol. NH₃ concentrado</p>
+                                        <div class="flex items-center mt-1">
                                             <i class="fas fa-weight text-green-600 mr-2"></i>
                                             <div><span class="font-bold">Masa Molar:</span> 17 g/mol</div>
                                         </div>
-                                        <div class="mt-2">
+                                        <div class="mt-1">
                                             <span class="font-bold">Gas más ligero</span> → <span class="font-bold text-green-600">Difusión más rápida</span>
                                         </div>
                                     </div>
@@ -2109,49 +2112,58 @@
                         <div class="flex items-start">
                             <div class="w-1/12 flex justify-center flex-shrink-0">
                                 <div class="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center">
-                                    <i class="fas fa-question-circle text-blue-600 text-3xl"></i>
+                                    <i class="fas fa-ruler-combined text-blue-600 text-3xl"></i>
                                 </div>
                             </div>
                             <div class="w-11/12 pl-6">
-                                <h2 class="text-xl font-bold text-gray-800 mb-4">¿Dónde se forma el anillo y por qué?</h2>
+                                <h2 class="text-xl font-bold text-gray-800 mb-4">Análisis del Experimento</h2>
                                 <div class="bg-yellow-50 p-4 rounded-lg mb-4">
                                     <div class="flex items-start">
                                         <div class="w-8 h-8 rounded-full bg-yellow-200 flex items-center justify-center mr-3 mt-1 flex-shrink-0">
                                             <i class="fas fa-lightbulb text-yellow-600"></i>
                                         </div>
                                         <div>
-                                            <h3 class="font-bold text-gray-800">Observación:</h3>
-                                            <p class="mt-1">El anillo blanco de NH₄Cl se forma <span class="font-bold">más cerca del extremo del HCl</span> (el gas más pesado).</p>
+                                            <h3 class="font-bold text-gray-800">Observación Experimental:</h3>
+                                            <p class="mt-1">El anillo blanco de NH₄Cl se forma <span class="font-bold">más cerca del extremo del HCl</span>.</p>
+                                            <p class="mt-1 text-sm">Medimos las distancias: <span class="font-bold">d<sub>NH₃</sub></span> y <span class="font-bold">d<sub>HCl</sub></span> desde cada extremo hasta el anillo.</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="bg-blue-50 p-4 rounded-lg">
-                                        <h3 class="font-bold text-blue-800 mb-2">Explicación según la Ley de Graham</h3>
-                                        <p>La velocidad de difusión es inversamente proporcional a la raíz cuadrada de la masa molar:</p>
-                                        <div class="formula bg-white p-3 rounded text-center mt-2">
-                                            <span class="font-bold">v<sub>NH₃</sub> / v<sub>HCl</sub> = √(M<sub>HCl</sub> / M<sub>NH₃</sub>)</span>
+                                        <h3 class="font-bold text-blue-800 mb-2">Relacionando Velocidad y Distancia</h3>
+                                        <p class="text-sm">El <span class="font-bold">tiempo (t)</span> que tardan ambos gases en encontrarse es el <span class="font-bold">mismo</span>.</p>
+                                        <p class="text-sm mt-1">Sabemos que <span class="font-bold">velocidad (v) = distancia (d) / tiempo (t)</span>.</p>
+                                        <div class="formula bg-white p-2 rounded text-center mt-2 text-sm">
+                                            v<sub>NH₃</sub> = d<sub>NH₃</sub> / t   <span class="mx-2">;</span>   v<sub>HCl</sub> = d<sub>HCl</sub> / t
                                         </div>
-                                        <div class="formula bg-white p-3 rounded text-center mt-2">
-                                            <span class="font-bold">v<sub>NH₃</sub> / v<sub>HCl</sub> = √(36.5 / 17) ≈ √2.15 ≈ 1.47</span>
+                                        <p class="text-sm mt-1">Por lo tanto, la relación de velocidades experimentales es:</p>
+                                        <div class="formula bg-white p-2 rounded text-center mt-1 font-bold text-blue-700">
+                                            v<sub>NH₃</sub> / v<sub>HCl</sub> = d<sub>NH₃</sub> / d<sub>HCl</sub>
                                         </div>
                                     </div>
-                                    <div class="bg-gray-50 p-4 rounded-lg">
-                                        <h3 class="font-bold text-gray-800 mb-2">Conclusión</h3>
-                                        <ul class="list-disc ml-5 space-y-2">
-                                            <li>El NH₃ se difunde ~1.47 veces más rápido que el HCl.</li>
-                                            <li>El NH₃ recorre mayor distancia en el mismo tiempo.</li>
-                                            <li>El punto de encuentro (anillo blanco) está más cerca del extremo del HCl.</li>
-                                            <li>Esta demostración visual confirma la Ley de Graham.</li>
-                                        </ul>
+                                    <div class="bg-indigo-50 p-4 rounded-lg">
+                                        <h3 class="font-bold text-indigo-800 mb-2">Comparando con la Ley de Graham</h3>
+                                        <p class="text-sm">La Ley de Graham predice teóricamente:</p>
+                                        <div class="formula bg-white p-2 rounded text-center mt-1 font-bold text-indigo-700">
+                                            v<sub>NH₃</sub> / v<sub>HCl</sub> = √(M<sub>HCl</sub> / M<sub>NH₃</sub>)
+                                        </div>
+                                        <div class="formula bg-white p-2 rounded text-center mt-2 text-sm">
+                                            = √(36.5 / 17) ≈ √2.15 ≈ <span class="font-bold">1.47</span>
+                                        </div>
+                                        <p class="text-sm mt-1">Esto significa que el NH₃ se difunde ~1.47 veces más rápido que el HCl y, por lo tanto, recorre ~1.47 veces más distancia en el mismo tiempo.</p>
                                     </div>
+                                </div>
+                                <div class="bg-green-50 p-4 rounded-lg mt-4">
+                                     <h3 class="font-bold text-green-800 mb-2">Conclusión</h3>
+                                     <p class="text-sm">El NH₃ (más ligero) viaja más rápido y recorre una mayor distancia (d<sub>NH₃</sub> > d<sub>HCl</sub>) antes de encontrarse con el HCl (más pesado). El punto de encuentro (anillo blanco) estará más cerca del extremo del HCl. La relación de distancias medidas experimentalmente (<span class="font-bold">d<sub>NH₃</sub> / d<sub>HCl</sub></span>) debería ser aproximadamente igual a la relación de velocidades teórica (<span class="font-bold">√(M<sub>HCl</sub> / M<sub>NH₃</sub>)</span>), confirmando la Ley de Graham.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> <!-- Fin de #slide15_nn -->
+        </div> <!-- Fin de #slide15_nn --><!-- Fin de #slide15_nn -->
         <!-- SLIDE 16 (antes Slide 12): Cálculo de Ejemplo 1 -->
         <div id="slide16_nn" class="slide-content">
             <div class="slide flex flex-col items-center justify-start">
@@ -2956,7 +2968,7 @@
                     </div>
                     
                     <p class="thank-you-message mt-12">¡Gracias por su atención!</p>
-                    <p class="contact-info text-sm">Tu Nombre | tu.email@example.com (Opcional)</p>
+                    <p class="contact-info text-sm">Alberto Albesa| albesa@inifta.unlp.edu.ar</p>
                 </div>
             </div>
         </div> <!-- Fin de #slide25_nn -->

@@ -1329,6 +1329,7 @@
         </div> <!-- Fin de #slide9_nn --><!-- Fin de #slide9_nn -->
 
         <!-- SLIDE 10 (antes Slide 6): Base Teórica - TCM -->
+        <!-- SLIDE 10 (antes Slide 6): Base Teórica - TCM -->
         <div id="slide10_nn" class="slide-content">
              <div class="slide flex flex-col items-center justify-start">
                 <div class="molecules">
@@ -1361,25 +1362,30 @@
                                     <i class="fas fa-atom text-blue-700 text-3xl mr-3"></i>
                                     <h3 class="text-xl font-bold text-blue-800">Principios clave de la TCM</h3>
                                 </div>
-                                <ul class="space-y-4 pl-4">
+                                <ul class="space-y-3 pl-4"> {/* Ajustado space-y para mejor espaciado con el nuevo item */}
                                     <li class="flex">
                                         <i class="fas fa-arrow-right text-teal-600 mt-1 mr-3"></i>
                                         <p>Las partículas de gas están en movimiento <span class="font-semibold">constante, rápido y aleatorio</span>.</p>
                                     </li>
                                     <li class="flex">
                                         <i class="fas fa-arrow-right text-teal-600 mt-1 mr-3"></i>
-                                        <p>La energía cinética promedio (<span class="italic">KE<sub>prom</sub></span>) de las partículas de un gas es <span class="font-semibold">directamente proporcional</span> a la temperatura absoluta (<span class="italic">T</span>) del gas.</p>
+                                        <div> {/* Div para agrupar párrafo y fórmula */}
+                                            <p>La energía cinética promedio (<span class="italic">KE<sub>prom</sub></span>) de las partículas de un gas es <span class="font-semibold">directamente proporcional</span> a la temperatura absoluta (<span class="italic">T</span>) del gas.</p>
+                                            <p class="formula text-blue-700 text-lg mt-1 ml-2">
+                                                Específicamente: <span class="font-semibold italic">KE<sub>prom molar</sub> = <sup>3</sup>⁄<sub>2</sub> RT</span>
+                                            </p>
+                                        </div>
                                     </li>
                                     <li class="flex highlight-box">
                                         <i class="fas fa-star text-yellow-500 mt-1 mr-3"></i>
-                                        <p class="font-semibold">A una misma temperatura, todas las moléculas de diferentes gases tienen la misma energía cinética promedio.</p>
+                                        <p class="font-semibold">A una misma temperatura, todas las moléculas de diferentes gases tienen la <span class="text-red-600">misma energía cinética promedio</span>.</p>
                                     </li>
                                 </ul>
                             </div>
                             <div class="card p-5">
                                 <div class="flex items-center mb-3">
                                     <i class="fas fa-calculator text-green-600 text-2xl mr-3"></i>
-                                    <h3 class="text-xl font-bold text-blue-800">Fórmula de la energía cinética</h3>
+                                    <h3 class="text-xl font-bold text-blue-800">Definición de Energía Cinética</h3> {/* Título ligeramente cambiado para diferenciar */}
                                 </div>
                                 <div class="formula text-3xl text-center my-2">
                                     <span class="text-blue-700">KE = </span>

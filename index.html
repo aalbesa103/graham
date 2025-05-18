@@ -903,64 +903,103 @@
         </div> <!-- Fin de #slide4_nn -->
 
         <!-- SLIDE 5 (antes Slide 1): Thomas Graham -->
-        <div id="slide5_nn" class="slide-content">
+        <!-- SLIDE 9 (antes Slide 5): La Ley de Graham - Enunciado -->
+        <div id="slide9_nn" class="slide-content">
             <div class="slide flex flex-col items-center justify-start">
-                <!-- Animated background molecules -->
                 <div class="molecules">
-                    <div class="molecule bg-blue-400" style="width: 40px; height: 40px; top: 10%; left: 20%; animation-delay: 0s;"></div>
-                    <div class="molecule bg-green-400" style="width: 50px; height: 50px; top: 70%; left: 40%; animation-delay: 1s;"></div>
-                    <div class="molecule bg-teal-400" style="width: 30px; height: 30px; top: 30%; left: 70%; animation-delay: 2s;"></div>
-                    <div class="molecule bg-blue-300" style="width: 45px; height: 45px; top: 60%; left: 85%; animation-delay: 3s;"></div>
-                    <div class="molecule bg-green-300" style="width: 55px; height: 55px; top: 15%; left: 50%; animation-delay: 4s;"></div>
+                    <div class="molecule bg-blue-300" style="width: 40px; height: 40px; top: 10%; left: 20%; animation-delay: 0s;"></div>
+                    <div class="molecule bg-yellow-400" style="width: 30px; height: 30px; top: 70%; left: 40%; animation-delay: 1s;"></div>
+                    <div class="molecule bg-teal-400" style="width: 35px; height: 35px; top: 30%; left: 70%; animation-delay: 2s;"></div>
+                    <div class="molecule bg-blue-400" style="width: 25px; height: 25px; top: 60%; left: 85%; animation-delay: 3s;"></div>
+                    <div class="molecule bg-yellow-300" style="width: 45px; height: 45px; top: 15%; left: 50%; animation-delay: 4s;"></div>
                 </div>
+                <div class="content-wrapper w-full px-12 py-8 relative z-10">
+                    <h1 class="title font-bold mb-8 text-center">¿Qué Establece la Ley de Graham?</h1>
+                    <div class="law-box bg-gradient-to-r from-blue-50 to-teal-50 p-6 mx-auto max-w-4xl text-center">
+                        <p class="text-2xl text-blue-800 font-semibold italic mb-2">
+                            "A temperatura y presión constantes, la velocidad de efusión (o difusión) de un gas es inversamente proporcional a la raíz cuadrada de su masa molar."
+                        </p>
+                        <div class="formula text-3xl my-4 italic">
+                            <span class="text-blue-700">v ∝ </span>
+                            <span class="text-blue-700">1/√M</span>
+                        </div>
+                        <div class="text-lg text-blue-600">Donde v es la velocidad de efusión o difusión y M es la masa molar</div>
+                    </div>
+                    <div class="flex mt-8 mx-auto max-w-5xl">
+                        <div class="w-3/5 pr-6">
+                            <div class="inverse-relation"> {/* Contenedor para el gráfico y partículas */}
+                                {/* Ejes definidos por CSS */}
+                                <div class="axis x-axis"></div>
+                                <div class="axis y-axis"></div>
+                                
+                                {/* Contenedor de la curva SVG, posicionado para coincidir con los ejes */}
+                                <div class="curve">
+                                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                        {/* RUTA CORREGIDA Y AJUSTADA */}
+                                        <path d="M 5,5 Q 25,75 95,95" class="curve-line"></path>
+                                        {/* Explicación de la ruta:
+                                             M 5,5: Mover al punto de inicio (X bajo, Y bajo en SVG).
+                                                    Visualmente: Baja Masa Molar, Alta Velocidad.
+                                             Q 25,75: Punto de control para la forma de la curva descendente.
+                                             95,95: Mover al punto final (X alto, Y alto en SVG).
+                                                    Visualmente: Alta Masa Molar, Baja Velocidad.
+                                        */}
+                                    </svg>
+                                </div>
 
-                <!-- Main content -->
-                <div class="content-wrapper w-full px-12 py-8">
-                    <h1 class="frametitle font-bold mb-8 text-center">El Padre de la Química Coloidal</h1> <!-- Usando frametitle pero manteniendo el estilo original -->
-                    
-                    <div class="flex">
-                        <!-- Left column - Portrait and dates -->
-                        <div class="w-1/3 flex flex-col items-center justify-start">
-                            <img src="Thomas_Graham.jpg" alt="Thomas Graham" class="portrait w-64 h-auto mb-6">
-                            <div class="dates text-center text-xl font-bold">
-                                Thomas Graham
-                                <div class="text-lg font-normal">1805 - 1869</div>
+                                {/* Etiquetas de los ejes */}
+                                <div class="axis-label" style="bottom: 20px; left: 50%; transform: translateX(-50%);">Masa Molar (g/mol) →</div>
+                                <div class="axis-label" style="top: 45%; left: 10px; transform: translateY(-50%) rotate(-90deg);">Velocidad de Efusión ↑</div>
+                                
+                                {/* Partículas animadas (su animación es horizontal, no sigue la curva SVG) */}
+                                <div class="particle light"></div>
+                                <div class="particle heavy"></div>
+                                
+                                {/* Leyenda de las partículas */}
+                                <div class="absolute top-4 right-4 bg-white bg-opacity-80 px-3 py-2 rounded-lg shadow-sm text-sm">
+                                    <div class="flex items-center">
+                                        <span class="inline-block w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+                                        <span>Gas ligero (menor masa, alta velocidad)</span>
+                                    </div>
+                                    <div class="flex items-center mt-1">
+                                        <span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-2"></span>
+                                        <span>Gas pesado (mayor masa, baja velocidad)</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Right column - Biography and contributions -->
-                        <div class="w-2/3 pl-8">
-                            <div class="bg-white bg-opacity-75 p-6 rounded-lg shadow-lg mb-8"> <!-- Estilo de card original -->
-                                <h2 class="text-2xl font-semibold text-teal-700 mb-3">
-                                    <i class="fas fa-book-open mr-2"></i>Biografía
-                                </h2>
-                                <ul class="text-gray-700 text-lg space-y-2">
-                                    <li><i class="fas fa-graduation-cap text-blue-500 mr-2"></i>Químico escocés nacido en Glasgow</li>
-                                    <li><i class="fas fa-university text-blue-500 mr-2"></i>Profesor de Química en la Universidad de Glasgow y Londres</li>
-                                    <li><i class="fas fa-award text-blue-500 mr-2"></i>Primer presidente de la Chemical Society of London</li>
-                                    <li><i class="fas fa-landmark text-blue-500 mr-2"></i>Director de la Casa de la Moneda Real Británica (1855-1869)</li>
+                        <div class="w-2/5 space-y-5">
+                            <div class="card p-5">
+                                <div class="mb-2 text-xl font-bold text-blue-700">
+                                    <i class="fas fa-lightbulb mr-2 text-yellow-400"></i>En palabras más sencillas
+                                </div>
+                                <ul class="list-disc pl-6 space-y-3">
+                                    <li class="text-lg">
+                                        <span class="font-semibold text-blue-800">Los gases más ligeros</span> 
+                                        (menor masa molar) se mueven (efunden/difunden) 
+                                        <span class="font-semibold text-blue-800">más rápido</span>.
+                                    </li>
+                                    <li class="text-lg">
+                                        <span class="font-semibold text-blue-800">Los gases más pesados</span> 
+                                        (mayor masa molar) se mueven 
+                                        <span class="font-semibold text-blue-800">más lento</span>.
+                                    </li>
                                 </ul>
                             </div>
-                            
-                            <div class="bg-white bg-opacity-75 p-6 rounded-lg shadow-lg"> <!-- Estilo de card original -->
-                                <h2 class="text-2xl font-semibold text-teal-700 mb-4">
-                                    <i class="fas fa-flask mr-2"></i>Principales Contribuciones
-                                </h2>
-                                <div class="space-y-4">
-                                    <div class="contribution-item pl-4">
-                                        <h3 class="text-xl font-semibold text-blue-600">Ley de Graham (1829)</h3>
-                                        <p class="text-gray-700">Estableció la relación entre la velocidad de difusión de los gases y su masa molecular</p>
+                            <div class="card p-5">
+                                <div class="mb-2 text-xl font-bold text-blue-700">
+                                    <i class="fas fa-flask mr-2 text-green-500"></i>Ejemplo numérico
+                                </div>
+                                <p class="mb-3">
+                                    Si comparamos dos gases, uno con masa molar 4 veces mayor que el otro:
+                                </p>
+                                <div class="bg-blue-50 p-3 rounded-lg text-center">
+                                    <div class="text-lg font-semibold mb-2">El gas más ligero se moverá:</div>
+                                    <div class="text-3xl font-bold text-blue-700">
+                                        2 veces más rápido
                                     </div>
-                                    
-                                    <div class="contribution-item pl-4">
-                                        <h3 class="text-xl font-semibold text-blue-600">Diálisis (1861)</h3>
-                                        <p class="text-gray-700">Desarrolló la técnica de diálisis para separar sustancias en solución</p>
-                                    </div>
-                                    
-                                    <div class="contribution-item pl-4">
-                                        <h3 class="text-xl font-semibold text-blue-600">Química de Coloides</h3>
-                                        <p class="text-gray-700">Acuñó los términos "coloide" y "cristaloide"</p>
-                                        <p class="text-gray-700">Distinguió entre soluciones coloidales y cristalinas</p>
+                                    <div class="italic text-sm text-blue-600 mt-2">
+                                        (porque √4 = 2)
                                     </div>
                                 </div>
                             </div>
@@ -968,7 +1007,7 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- Fin de #slide5_nn -->
+        </div> <!-- Fin de #slide9_nn --> <!-- Fin de #slide5_nn -->
 
              <!-- SLIDE 6 (antes Slide 2): Conceptos Clave - Movimiento de Gases -->
 <div id="slide6_nn" class="slide-content"> 
